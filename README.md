@@ -2,7 +2,7 @@
 ## Подготовка
 Необходимо форкнуть репу, сделать её приватной и добавить следующих пользователей:
 > mrGexogen vbabayan kirimedia
-> alexandr_289 n_shch ArtemSarmini Flash1e The_Psina phan7asy NaumaN-Sikrii im.kamie saptded BUSH1997 decadanceeeee artem_mur a.sergey P00mP00m alexersh hk3.aea shadkain nickeskov
+> alexandr_289 n_shch ArtemSarmini Flash1e The_Psina phantasy NaumaN-Sikrii im.kamie saptded BUSH1997 decadanceeeee artem_mur a.sergey P00mP00m alexersh hk3.aea shadkain nickeskov
 
 с правами **Developer**.
 
