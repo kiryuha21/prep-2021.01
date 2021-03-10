@@ -12,11 +12,11 @@
 #define TST_MOD_IMPL 3
 
 int strtol_check(const char* end) {
-	if (*end != '\0') {
-		printf("Ошибка ввода\n");
-		return 0;
-	}
-	return 1;
+    if (*end != '\0') {
+        printf("Ошибка ввода\n");
+        return 0;
+    }
+    return 1;
 }
 
 int main(int argc, const char** argv) {
