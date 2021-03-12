@@ -7,7 +7,7 @@ int is_prime(int value) {
         return 0;
     }
 
-    for (int i = 3; i * i < value; i+=2) {
+    for (int i = 3; i * i <= value; i+=2) {
         if (value % i == 0)
             return 0;
     }

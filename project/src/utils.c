@@ -9,6 +9,8 @@ size_t custom_strlen(const char* str) {
 int custom_pow(int base, int power) {
     if (base == 1 || power == 0) {
         return 1;
+    } else if (power == 1) {
+    	return base;
         } else {
             int start = base;
             for (int i = 0; i < power / 2 - 1; ++i) {
