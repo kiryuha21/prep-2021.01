@@ -12,13 +12,16 @@ int custom_pow(int base, int power) {
         } else {
             int result = 1;
             while (power) {
+
                 if (!(power & 1)) {
                     power /= 2;
                     base *= base;
+
                 } else {
                     --power;
                     result *= base;
                 }
+                
             }
             return result;
         }
