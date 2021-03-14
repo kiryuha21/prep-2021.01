@@ -7,21 +7,19 @@ size_t custom_strlen(const char* str) {
 }
 
 int custom_pow(int base, int power) {
-    if (base == 1 || power == 0) {
+    if (base == 1) {
         return 1;
-    } else if (power == 1) {
-    	return base;
         } else {
-            int start = base;
-            for (int i = 0; i < power / 2 - 1; ++i) {
-                base *= start;
+            int result = 1;
+            while (power) {
+                if (!(power & 1)) {
+                    power /= 2;
+                    base *= base;
+                } else {
+                    --power;
+                    result *= base;
+                }
             }
-
-            if (power % 2 == 0) {
-                base *= base;
-            } else {
-                base *= (base * start);
-            }
-            return base;
+            return result;
         }
 }
