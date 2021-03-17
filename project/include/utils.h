@@ -1,9 +1,22 @@
-#define UTILS_H
-#ifndef UTILS_H
+#ifndef PROJECT_INCLUDE_UTILS_H_
+#define PROJECT_INCLUDE_UTILS_H_
 
-#define filename "transaction.dat";
+#include <stdio.h>
+#include <stdlib.h>
 
-// This comment is very useful
-printf("This message is very useful too")
+#define filename "/home/kiryuha21/prep-2021.01/btests/transaction.dat"
 
-#endif //UTILS_H
+struct masterRecord{
+    int Number;
+    char Name[20];
+    char Surname[20];
+    char address[30];
+    char TelNumber[15];
+    double indebtedness;
+    double credit_limit;
+    double cash_payments;
+};
+
+typedef struct masterRecord Data;
+
+#endif  // PROJECT_INCLUDE_UTILS_H_
