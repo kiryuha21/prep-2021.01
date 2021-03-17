@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define filename "/home/kiryuha21/prep-2021.01/btests/transaction.dat"
+#define filename "transaction.dat"
 
 struct masterRecord{
     int Number;

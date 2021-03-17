@@ -11,7 +11,7 @@ int main(void) {
     while (scanf("%d", &choice) != -1) {
         switch (choice) {
             case 1:
-                Ptr = fopen("/home/kiryuha21/prep-2021.01/btests/record.dat", "r+");
+                Ptr = fopen("record.dat", "r+");
                 if (Ptr == NULL) {
                     puts("Not access");
                 } else {
@@ -29,9 +29,9 @@ int main(void) {
                 }
                 break;
             case 3:
-                Ptr = fopen("/home/kiryuha21/prep-2021.01/btests/record.dat", "r");
+                Ptr = fopen("record.dat", "r");
                 Ptr_2 = fopen(filename, "r");
-                blackrecord = fopen("/home/kiryuha21/prep-2021.01/btests/blackrecord.dat", "w");
+                blackrecord = fopen("blackrecord.dat", "w");
                 if (Ptr == NULL || Ptr_2 == NULL) {
                     puts("exit");
                 } else {
