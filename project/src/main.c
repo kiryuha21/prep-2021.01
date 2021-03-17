@@ -2,8 +2,12 @@
 #include "transactionwrite.h"
 #include "masterwrite.h"
 #include "blackrecord.h"
+#include "file_open_read_check.h"
 
 int main(void) {
+    if (file_open_read_check("file_for_io_test") == 0) {
+        return -1;
+    }
     int choice = 0;
     FILE *Ptr, *Ptr_2 , *blackrecord;
     Data client_data = {0}, transfer = {0};

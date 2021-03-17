@@ -5,7 +5,8 @@ SRCS = \
 		project/src/main.c \
 		project/src/masterwrite.c \
 		project/src/blackrecord.c \
-		project/src/transactionwrite.c
+		project/src/transactionwrite.c \
+		project/src/file_open_read_check.c
 
 .PHONY: all clean
 
