@@ -3,6 +3,7 @@
 
 #include "utils.h"
 
-void masterWrite(FILE *record_file, Data Client);
+void master_write_print();
+void master_write(FILE *record_file, data Client);
 
 #endif  // PROJECT_INCLUDE_MASTERWRITE_H_

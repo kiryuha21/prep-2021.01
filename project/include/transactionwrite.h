@@ -3,6 +3,7 @@
 
 #include "utils.h"
 
-void transactionWrite(FILE* transaction_file, Data transfer);
+void transaction_print();
+void transaction_write(FILE* transaction_file, data transfer);
 
 #endif  // PROJECT_INCLUDE_TRANSACTIONWRITE_H_
