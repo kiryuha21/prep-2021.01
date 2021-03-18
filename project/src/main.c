@@ -9,40 +9,40 @@ int main(void) {
         return -1;
     }
     int choice = 0;
-    FILE *Ptr, *Ptr_2 , *blackrecord;
+    FILE *record_file, *transaction_file , *blackrecord_file;
     Data client_data = {0}, transfer = {0};
     printf("%s", "please enter action\n1 enter data client:\n2 enter data transaction:\n3 update base\n");
     while (scanf("%d", &choice) != -1) {
         switch (choice) {
             case 1:
-                Ptr = fopen("record.dat", "r+");
-                if (Ptr == NULL) {
+                record_file = fopen("record.dat", "r+");
+                if (record_file == NULL) {
                     puts("Not access");
                 } else {
-                    masterWrite(Ptr, client_data);
-                    fclose(Ptr);
+                    masterWrite(record_file, client_data);
+                    fclose(record_file);
                 }
                 break;
             case 2:
-                Ptr = fopen(filename, "r+");
-                if (Ptr == NULL) {
+                transaction_file = fopen(filename, "r+");
+                if (transaction_file == NULL) {
                     puts("Not access");
                 } else {
-                    transactionWrite(Ptr, transfer);
-                    fclose(Ptr);
+                    transactionWrite(transaction_file, transfer);
+                    fclose(transaction_file);
                 }
                 break;
             case 3:
-                Ptr = fopen("record.dat", "r");
-                Ptr_2 = fopen(filename, "r");
-                blackrecord = fopen("blackrecord.dat", "w");
-                if (Ptr == NULL || Ptr_2 == NULL) {
+                record_file = fopen("record.dat", "r");
+                transaction_file = fopen(filename, "r");
+                blackrecord_file = fopen("blackrecord.dat", "w");
+                if (record_file == NULL || transaction_file == NULL) {
                     puts("exit");
                 } else {
-                    blackRecord(Ptr, Ptr_2, blackrecord, client_data, transfer);
-                    fclose(Ptr);
-                    fclose(Ptr_2);
-                    fclose(blackrecord);
+                    blackRecord(record_file, transaction_file, blackrecord_file, client_data, transfer);
+                    fclose(record_file);
+                    fclose(transaction_file);
+                    fclose(blackrecord_file);
                 }
                 break;
             default:

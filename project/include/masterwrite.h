@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-void masterWrite(FILE *ofPTR, struct masterRecord Client);
+void masterWrite(FILE *record_file, Data Client);
 
 #endif  // PROJECT_INCLUDE_MASTERWRITE_H_

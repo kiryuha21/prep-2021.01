@@ -3,10 +3,9 @@
 
 #include "utils.h"
 
-void blackRecord(FILE *ofPTR,
-                 FILE  *ofPTR_2,
-                 FILE *blackrecord,
-                 struct masterRecord client_data,
-                 struct masterRecord transfer);
+void blackRecord(FILE *record_file,
+                 FILE *transaction_file,
+                 FILE *blackrecord_file,
+                 Data client_data, Data transfer);
 
 #endif  // PROJECT_INCLUDE_BLACKRECORD_H_

@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-void transactionWrite(FILE* ofPTR, Data transer);
+void transactionWrite(FILE* transaction_file, Data transfer);
 
 #endif  // PROJECT_INCLUDE_TRANSACTIONWRITE_H_
