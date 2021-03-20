@@ -1,5 +1,6 @@
 TARGET = main.out
 HDRS_DIR = project/include
+CC = cc
 
 SRCS = \
 		project/src/main.c \
@@ -8,6 +9,11 @@ SRCS = \
 		project/src/transactionwrite.c \
 		project/src/file_open_read_check.c
 
+TEST_TARGET = test_main.out
+TEST_HDR = project/include
+TEST_SRCS = project/src/file_open_read_check.c \
+			io_test/main.c
+
 .PHONY: all clean
 
 all: $(SRCS)
@@ -15,3 +21,9 @@ all: $(SRCS)
 
 clean:
 	rm -rf $(TARGET)
+
+test: $(TEST_SRCS)
+	$(CC) -Wall -Wextra -Werror -I $(TEST_HDR) -o $(TEST_TARGET) $(TEST_SRCS)
+
+test_clean:
+	rm -fr $(TEST_TARGET)

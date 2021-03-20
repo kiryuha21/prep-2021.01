@@ -24,7 +24,7 @@ int main(void) {
     FILE *record_file, *transaction_file , *blackrecord_file;
     data client_data = {0}, transfer = {0};
     choice_print();
-    while (scanf("%d", &choice) != -1) {
+    while (scanf("%d", &choice) > 0) {
         switch (choice) {
             case DATA_RECORD:
                 record_file = fopen("record.dat", "r+");
@@ -61,6 +61,15 @@ int main(void) {
                 transaction_file = fopen(filename, "r");
                 blackrecord_file = fopen("blackrecord.dat", "w");
                 if (record_file == NULL || transaction_file == NULL || blackrecord_file == NULL) {
+                    if (record_file != NULL) {
+                        fclose(record_file);
+                    }
+                    if (transaction_file != NULL) {
+                        fclose(transaction_file);
+                    }
+                    if (blackrecord_file != NULL) {
+                        fclose(blackrecord_file);
+                    }
                     puts("Not access");
                     return FILE_ACCESS_ERR;
                 } else {
