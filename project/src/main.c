@@ -64,10 +64,16 @@ int main(void) {
                     puts("Not access");
                     return FILE_ACCESS_ERR;
                 } else {
-                    if (!blackrecord(record_file, transaction_file, blackrecord_file, client_data, transfer)) {
+                    if (!blackrecord(record_file,
+                                     transaction_file,
+                                     blackrecord_file,
+                                     client_data,
+                                     transfer)) {
                         puts("blackrecord error");
                     }
-                    if (fclose(record_file) != 0 || fclose(transaction_file) != 0 || fclose(blackrecord_file) != 0) {
+                    if (fclose(record_file) != 0 ||
+                        fclose(transaction_file) != 0 ||
+                        fclose(blackrecord_file) != 0) {
                         puts("fclose error");
                         return FCLOSE_ERR;
                     }
