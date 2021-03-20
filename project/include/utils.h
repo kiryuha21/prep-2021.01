@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <stdbool.h>
+
 #define filename "transaction.dat"
 
 struct master_record{

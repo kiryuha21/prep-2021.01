@@ -1,6 +1,6 @@
 #include "blackrecord.h"
 
-void blackrecord(FILE *record_file,
+bool blackrecord(FILE *record_file,
                  FILE *transaction_file,
                  FILE *blackrecord_file,
                  data client_data, data transfer) {
@@ -18,7 +18,7 @@ void blackrecord(FILE *record_file,
                 client_data.credit_limit += transfer.cash_payments;
             }
         }
-        fprintf(blackrecord_file, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
+        if (fprintf(blackrecord_file, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
                                 client_data.number,
                                 client_data.name,
                                 client_data.surname,
@@ -26,7 +26,10 @@ void blackrecord(FILE *record_file,
                                 client_data.tel_number,
                                 client_data.indebtedness,
                                 client_data.credit_limit,
-                                client_data.cash_payments);
+                                client_data.cash_payments) == -1) {
+            return 0;
+        }
         rewind(transaction_file);
     }
+    return 1;
 }

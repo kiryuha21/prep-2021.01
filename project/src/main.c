@@ -4,10 +4,13 @@
 #include "blackrecord.h"
 #include "file_open_read_check.h"
 
-#define IO_OPERATORS_ERR -1;
-#define DATA_RECORD 1
+#define IO_OPERATORS_ERR -1
+#define FILE_ACCESS_ERR  -2
+#define FCLOSE_ERR       -3
+
+#define DATA_RECORD             1
 #define TRANSACTION_DATA_RECORD 2
-#define BLACKRECORD_OPERATION 3
+#define BLACKRECORD_OPERATION   3
 
 void choice_print() {
     puts("please enter action\n1 enter data client:\n2 enter data transaction:\n3 update base\n");
@@ -27,18 +30,30 @@ int main(void) {
                 record_file = fopen("record.dat", "r+");
                 if (record_file == NULL) {
                     puts("Not access");
+                    return FILE_ACCESS_ERR;
                 } else {
-                    master_write(record_file, client_data);
-                    fclose(record_file);
+                    if (!master_write(record_file, client_data)) {
+                        puts("master_write error");
+                    }
+                    if (fclose(record_file) != 0) {
+                        puts("fclose error");
+                        return FCLOSE_ERR;
+                    }
                 }
                 break;
             case TRANSACTION_DATA_RECORD:
                 transaction_file = fopen(filename, "r+");
                 if (transaction_file == NULL) {
                     puts("Not access");
+                    return FILE_ACCESS_ERR;
                 } else {
-                    transaction_write(transaction_file, transfer);
-                    fclose(transaction_file);
+                    if (!transaction_write(transaction_file, transfer)) {
+                        puts("transaction_write error");
+                    }
+                    if (fclose(transaction_file) != 0) {
+                        puts("fclose error");
+                        return FCLOSE_ERR;
+                    }
                 }
                 break;
             case 3:
@@ -46,12 +61,16 @@ int main(void) {
                 transaction_file = fopen(filename, "r");
                 blackrecord_file = fopen("blackrecord.dat", "w");
                 if (record_file == NULL || transaction_file == NULL || blackrecord_file == NULL) {
-                    puts("exit");
+                    puts("Not access");
+                    return FILE_ACCESS_ERR;
                 } else {
-                    blackrecord(record_file, transaction_file, blackrecord_file, client_data, transfer);
-                    fclose(record_file);
-                    fclose(transaction_file);
-                    fclose(blackrecord_file);
+                    if (!blackrecord(record_file, transaction_file, blackrecord_file, client_data, transfer)) {
+                        puts("blackrecord error");
+                    }
+                    if (fclose(record_file) != 0 || fclose(transaction_file) != 0 || fclose(blackrecord_file) != 0) {
+                        puts("fclose error");
+                        return FCLOSE_ERR;
+                    }
                 }
                 break;
             default:

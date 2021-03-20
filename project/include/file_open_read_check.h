@@ -3,7 +3,6 @@
 
 #include "utils.h"
 #include <string.h>
-#include <stdbool.h>
 
 void write_to_file(const char* file_name, data* test_data);
 void read_from_file(const char* file_name, data* test_data);

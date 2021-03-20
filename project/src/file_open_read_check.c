@@ -52,9 +52,9 @@ bool file_open_read_check(const char* file_name) {
     write_to_file(file_name, &data_to_file);
     data data_from_file;
     read_from_file(file_name, &data_from_file);
-    if (data_comparison(&data_to_file, &data_from_file) == 0) {
-        printf("writing or reading error\n");
-        return 0;
+    bool compare = data_comparison(&data_to_file, &data_from_file);
+    if (!compare) {
+        puts("writing or reading error\n");
     }
-    return 1;
+    return compare;
 }

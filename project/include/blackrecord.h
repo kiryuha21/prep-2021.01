@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-void blackrecord(FILE *record_file,
+bool blackrecord(FILE *record_file,
                  FILE *transaction_file,
                  FILE *blackrecord_file,
                  data client_data, data transfer);

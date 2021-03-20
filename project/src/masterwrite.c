@@ -5,7 +5,7 @@ void master_write_print() {
     puts("5 Client Telnum: \n6 Client indebtedness: \n7 Client credit limit: \n8 Client cash payments: \n\n");
 }
 
-void master_write(FILE *record_file, data Client)  {
+bool master_write(FILE *record_file, data Client)  {
     master_write_print();
     while (scanf("%d%20s%20s%30s%15s%lf%lf%lf",
                 &Client.number,
@@ -16,7 +16,7 @@ void master_write(FILE *record_file, data Client)  {
                 &Client.indebtedness,
                 &Client.credit_limit,
                 &Client.cash_payments) != -1) {
-        fprintf(record_file, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
+        if (fprintf(record_file, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
                         Client.number,
                         Client.name,
                         Client.surname,
@@ -24,7 +24,10 @@ void master_write(FILE *record_file, data Client)  {
                         Client.tel_number,
                         Client.indebtedness,
                         Client.credit_limit,
-                        Client.cash_payments);
+                        Client.cash_payments) == -1) {
+            return 0;
+        }
         master_write_print();
     }
+    return 1;
 }
