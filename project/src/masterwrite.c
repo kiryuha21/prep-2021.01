@@ -7,24 +7,8 @@ void master_write_print() {
 
 bool master_write(FILE *record_file, data Client)  {
     master_write_print();
-    while (scanf("%d%20s%20s%30s%15s%lf%lf%lf",
-                &Client.number,
-                Client.name,
-                Client.surname,
-                Client.address,
-                Client.tel_number,
-                &Client.indebtedness,
-                &Client.credit_limit,
-                &Client.cash_payments) != -1) {
-        if (fprintf(record_file, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
-                        Client.number,
-                        Client.name,
-                        Client.surname,
-                        Client.address,
-                        Client.tel_number,
-                        Client.indebtedness,
-                        Client.credit_limit,
-                        Client.cash_payments) == -1) {
+    while (read_to_data(&Client)) {
+        if (!write_to_file(record_file, &Client)) {
             return 0;
         }
         master_write_print();

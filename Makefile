@@ -7,11 +7,11 @@ SRCS = \
 		project/src/masterwrite.c \
 		project/src/blackrecord.c \
 		project/src/transactionwrite.c \
-		project/src/file_open_read_check.c
+		project/src/input_output_check.c
 
 TEST_TARGET = test_main.out
 TEST_HDR = project/include
-TEST_SRCS = project/src/file_open_read_check.c \
+TEST_SRCS = project/src/input_output_check.c \
 			io_test/main.c
 
 .PHONY: all clean

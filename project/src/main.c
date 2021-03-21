@@ -2,11 +2,9 @@
 #include "transactionwrite.h"
 #include "masterwrite.h"
 #include "blackrecord.h"
-#include "file_open_read_check.h"
 
-#define IO_OPERATORS_ERR -1
-#define FILE_ACCESS_ERR  -2
-#define FCLOSE_ERR       -3
+#define FILE_ACCESS_ERR  -1
+#define FCLOSE_ERR       -2
 
 #define DATA_RECORD             1
 #define TRANSACTION_DATA_RECORD 2
@@ -17,9 +15,6 @@ void choice_print() {
 }
 
 int main(void) {
-    if (file_open_read_check("file_for_io_test") == 0) {
-        return IO_OPERATORS_ERR;
-    }
     int choice = 0;
     FILE *record_file, *transaction_file , *blackrecord_file;
     data client_data = {0}, transfer = {0};
@@ -96,4 +91,3 @@ int main(void) {
     }
     return 0;
 }
-
