@@ -1,5 +1,5 @@
-#ifndef PROJECT_INCLUDE_FILE_OPEN_READ_CHECK_H_
-#define PROJECT_INCLUDE_FILE_OPEN_READ_CHECK_H_
+#ifndef PROJECT_INCLUDE_INPUT_OUTPUT_CHECK_H_
+#define PROJECT_INCLUDE_INPUT_OUTPUT_CHECK_H_
 
 #include "utils.h"
 #include <string.h>
@@ -13,4 +13,4 @@ bool read_to_part_data(data* test_data);
 bool read_from_part_file(FILE* file_name, data* test_data);
 bool write_to_part_file(FILE* file_name, data* test_data);
 
-#endif  // PROJECT_INCLUDE_FILE_OPEN_READ_CHECK_H_
+#endif  // PROJECT_INCLUDE_INPUT_OUTPUT_CHECK_H_
