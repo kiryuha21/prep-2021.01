@@ -82,3 +82,8 @@ bool data_comparison(data* data_to_file, data* data_from_file) {
             data_to_file->credit_limit == data_from_file->credit_limit &&
             data_to_file->cash_payments == data_from_file->cash_payments;
 }
+
+bool part_data_comparison(data* data_to_file, data* data_from_file) {
+    return  data_to_file->number == data_from_file->number &&
+            data_to_file->cash_payments == data_from_file->cash_payments;
+}

@@ -12,7 +12,7 @@ SRCS = \
 TEST_TARGET = test_main.out
 TEST_HDR = project/include
 TEST_SRCS = project/src/input_output_check.c \
-			io_test/main.c
+			project/test/main.c
 
 .PHONY: all clean
 
