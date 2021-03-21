@@ -9,7 +9,7 @@ bool write_to_file(FILE* file_name, data* test_data) {
                 test_data->tel_number,
                 test_data->indebtedness,
                 test_data->credit_limit,
-                test_data->cash_payments) != -1) {
+                test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
@@ -25,7 +25,7 @@ bool read_from_file(FILE* file_name, data* test_data) {
                test_data->tel_number,
                &test_data->indebtedness,
                &test_data->credit_limit,
-               &test_data->cash_payments) != -1) {
+               &test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
@@ -41,7 +41,7 @@ bool read_to_data(data* test_data) {
                test_data->tel_number,
                &test_data->indebtedness,
                &test_data->credit_limit,
-               &test_data->cash_payments) != -1) {
+               &test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
@@ -49,7 +49,7 @@ bool read_to_data(data* test_data) {
 }
 
 bool read_to_part_data(data* test_data) {
-    if (scanf("%d %lf", &test_data->number, &test_data->cash_payments) != -1) {
+    if (scanf("%d %lf", &test_data->number, &test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
@@ -57,7 +57,7 @@ bool read_to_part_data(data* test_data) {
 }
 
 bool read_from_part_file(FILE* file_name, data* test_data) {
-    if (fscanf(file_name, "%d %lf", &test_data->number, &test_data->cash_payments) != -1) {
+    if (fscanf(file_name, "%d %lf", &test_data->number, &test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
@@ -65,7 +65,7 @@ bool read_from_part_file(FILE* file_name, data* test_data) {
 }
 
 bool write_to_part_file(FILE* file_name, data* test_data) {
-    if (fprintf(file_name, "%-3d%-6.2f\n", test_data->number, test_data->cash_payments) != -1) {
+    if (fprintf(file_name, "%-3d%-6.2f\n", test_data->number, test_data->cash_payments) > 0) {
         return 1;
     } else {
         return 0;
