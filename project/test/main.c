@@ -32,9 +32,9 @@ int main() {
 
     data data_to_file = {1, "name1", "surname1", "address1", "telnum1", 0, 12, 144};
     if (write_to_file(test_file, &data_to_file)) {
-        puts("write_to_file stage passed");
+        puts("\nwrite_to_file stage passed");
     } else {
-        puts("write_to_file stage error");
+        puts("\nwrite_to_file stage error");
         return WRITING_ERR;
     }
 
@@ -54,9 +54,9 @@ int main() {
     }
 
     if (data_comparison(&data_from_file, &data_to_file)) {
-        puts("first data_comparison stage passed");
+        puts("first data_comparison stage passed\n");
     } else {
-        puts("first data_comparison stage error");
+        puts("first data_comparison stage error\n");
     }
 
     if (!close_file(&test_file)) {
@@ -88,9 +88,9 @@ int main() {
     }
 
     if (part_data_comparison(&data_from_file, &data_to_file)) {
-        puts("first part_data_comparison stage passed");
+        puts("first part_data_comparison stage passed\n");
     } else {
-        puts("first part_data_comparison stage error");
+        puts("first part_data_comparison stage error\n");
         return COMPARISON_ERR;
     }
 
@@ -106,9 +106,9 @@ int main() {
     }
 
     if (data_comparison(&data_from_file, &data_to_file)) {
-        puts("second data_comparison stage passed");
+        puts("second data_comparison stage passed\n");
     } else {
-        puts("second data_comparison stage error");
+        puts("second data_comparison stage error\n");
     }
 
     if (read_to_part_data(&data_from_file)) {
@@ -119,11 +119,13 @@ int main() {
     }
 
     if (part_data_comparison(&data_from_file, &data_to_file)) {
-        puts("second part_data_comparison stage passed");
+        puts("second part_data_comparison stage passed\n\n");
     } else {
-        puts("second part_data_comparison stage error");
+        puts("second part_data_comparison stage error\n\n");
         return COMPARISON_ERR;
     }
+
+    puts("All tests completed successfully!\n\n");
 
     return 0;
 }

@@ -9,6 +9,7 @@ stages:
   - test_bin
   - test_mem
   - my_test_bin
+  - io_functions_check
 
 test_style:
   stage: test_style
@@ -38,3 +39,8 @@ my_test_bin:
   stage: my_test_bin
   script:
     - ./mybtests/run.sh ./${BIN_NAME}
+
+io_functions_check:
+  stage: io_functions_check
+  script:
+    - ./functions_tests/run.sh
