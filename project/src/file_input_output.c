@@ -1,4 +1,4 @@
-#include "input_output_check.h"
+#include "file_input_output.h"
 
 bool write_to_file(FILE* file_name, data* test_data) {
     if (fprintf(file_name, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
@@ -25,31 +25,23 @@ bool read_from_file(FILE* file_name, data* test_data) {
                test_data->tel_number,
                &test_data->indebtedness,
                &test_data->credit_limit,
-               &test_data->cash_payments) > 0) {
+               &test_data->cash_payments) == 8) {
         return 1;
     } else {
         return 0;
     }
 }
 
-bool read_to_data(data* test_data) {
-    if (scanf("%d%20s%20s%30s%15s%lf%lf%lf",
-               &test_data->number,
-               test_data->name,
-               test_data->surname,
-               test_data->address,
-               test_data->tel_number,
-               &test_data->indebtedness,
-               &test_data->credit_limit,
-               &test_data->cash_payments) > 0) {
+bool read_to_struct(data* test_data) {
+    if (read_from_file(stdin, test_data)) {
         return 1;
     } else {
         return 0;
     }
 }
 
-bool read_to_part_data(data* test_data) {
-    if (scanf("%d %lf", &test_data->number, &test_data->cash_payments) > 0) {
+bool read_to_part_struct(data* test_data) {
+    if (read_from_part_file(stdin, test_data)) {
         return 1;
     } else {
         return 0;
@@ -57,7 +49,7 @@ bool read_to_part_data(data* test_data) {
 }
 
 bool read_from_part_file(FILE* file_name, data* test_data) {
-    if (fscanf(file_name, "%d %lf", &test_data->number, &test_data->cash_payments) > 0) {
+    if (fscanf(file_name, "%d %lf", &test_data->number, &test_data->cash_payments) == 2) {
         return 1;
     } else {
         return 0;

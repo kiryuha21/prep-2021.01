@@ -7,7 +7,7 @@ void master_write_print() {
 
 bool master_write(FILE *record_file, data Client)  {
     master_write_print();
-    while (read_to_data(&Client)) {
+    while (read_to_struct(&Client)) {
         if (!write_to_file(record_file, &Client)) {
             return 0;
         }
