@@ -1,5 +1,5 @@
-#ifndef PROJECT_FILE_INCLUDE_TEST_FUNCTIONS_H_
-#define PROJECT_FILE_INCLUDE_TEST_FUNCTIONS_H_
+#ifndef PROJECT_INCLUDE_TEST_FUNCTIONS_H_
+#define PROJECT_INCLUDE_TEST_FUNCTIONS_H_
 
 #define FILE_OPEN_ERR   -1
 #define FILE_CLOSE_ERR  -2
@@ -16,4 +16,4 @@ int part_file_read_write_compare(FILE** test_file, data* data_to_file, data* dat
 int struct_read_compare(data* data_from_file, data *data_to_file);
 int part_struct_read_compare(data* data_from_file, data* data_to_file);
 
-#endif  // PROJECT_INCLUDE_FILE_INPUT_OUTPUT_H_
+#endif  //  PROJECT_INCLUDE_TEST_FUNCTIONS_H_
