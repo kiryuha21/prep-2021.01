@@ -1,10 +1,16 @@
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#ifndef UNTITLED2_MATRIX_H
+#define UNTITLED2_MATRIX_H
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 
+#define DET_ERR (-1)
 
 typedef struct Matrix {
+    double** matrix;
+    size_t rows;
+    size_t cols;
 } Matrix;
 
 // Init/release operations
@@ -31,5 +37,4 @@ int det(const Matrix* matrix, double* val);
 Matrix* adj(const Matrix* matrix);
 Matrix* inv(const Matrix* matrix);
 
-
-#endif //_MATRIX_H_
+#endif //UNTITLED2_MATRIX_H
