@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 #define DET_ERR (-1)
 
@@ -15,8 +14,8 @@ typedef struct Matrix {
 } Matrix;
 
 // support functions
-
-int swap_rows(Matrix* matrix, size_t first, size_t second);
+double recursive_det(double **mas, size_t m);
+int minus_row_col(double **mas, double **p, size_t i, size_t j, size_t m);
 
 // Init/release operations
 Matrix* create_matrix_from_file(const char* path_file);

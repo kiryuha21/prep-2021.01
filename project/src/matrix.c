@@ -155,78 +155,108 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
     return temp_matrix;
 }
 
-int swap_rows(Matrix* matrix, size_t first, size_t second) {
-    for (size_t i = 0; i < matrix->cols; ++i) {
-        double temp = matrix->matrix[first][i];
-        matrix->matrix[first][i] = matrix->matrix[second][i];
-        matrix->matrix[second][i] = temp;
+int minus_row_col(double **origin_matrix, double **temp_matrix, size_t row, size_t col, size_t m_size) {
+    size_t miss_row = 0;
+    for (size_t i = 0; i < m_size - 1; ++i) {
+        if (i == row) {
+            miss_row = 1;
+        }
+        size_t miss_col = 0;
+        for (size_t j = 0; j < m_size - 1; ++j) {
+            if (j == col) {
+                miss_col = 1;
+            }
+            temp_matrix[i][j] = origin_matrix[i + miss_row][j + miss_col];
+        }
     }
     return 0;
 }
 
-int det(const Matrix* matrix, double* val) {
-    if (matrix->cols != matrix->rows) {
+double recursive_det(double **origin_matrix, size_t m_size) {
+    size_t new_m_size = m_size - 1;
+    double **temp_matrix, temp_det = 0;
+    temp_matrix = (double**)malloc(sizeof(double)*m_size);
+    for (size_t i = 0; i < m_size; ++i) {
+        temp_matrix[i] = (double*)malloc(sizeof(double) * m_size);
+    }
+    if (m_size<1) {
+        for (size_t i = 0; i < m_size; ++i) {
+            free(temp_matrix[i]);
+        }
+        free(temp_matrix);
         return DET_ERR;
     }
-
-    Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
-    for (size_t i = 0; i < matrix->rows; ++i) {
-        for (size_t j = 0; j < matrix->cols; ++j) {
-            temp_matrix->matrix[i][j] = matrix->matrix[i][j];
+    if (m_size == 1) {
+        temp_det = origin_matrix[0][0];
+        for (size_t i = 0; i < m_size; ++i) {
+            free(temp_matrix[i]);
         }
+        free(temp_matrix);
+        return(temp_det);
     }
-
-    size_t pivot_index = -1;
-    double pivot_value = 0;
-    double determinant = 1;
-
-    for(size_t i = 0; i < temp_matrix->cols; ++i)
-    {
-        for(size_t j = i; j < temp_matrix->cols; ++j)
-        {
-            if(fabs(temp_matrix->matrix[j][i]) > pivot_value)
-            {
-                pivot_index = j;
-                pivot_value = fabs(temp_matrix->matrix[j][i]);
-            }
+    if (m_size == 2) {
+        temp_det = origin_matrix[0][0] * origin_matrix[1][1] - (origin_matrix[1][0] * origin_matrix[0][1]);
+        for (size_t i = 0; i < m_size; ++i) {
+            free(temp_matrix[i]);
         }
-
-        if(pivot_value == 0)
-        {
-            return DET_ERR;
-        }
-
-        if(pivot_index != i)
-        {
-            if (swap_rows(temp_matrix, pivot_index, i) != 0) {
+        free(temp_matrix);
+        return(temp_det);
+    }
+    if (m_size>2) {
+        int sign = 1;
+        for (size_t i = 0; i < m_size; ++i) {
+            if (minus_row_col(origin_matrix, temp_matrix, i, 0, m_size) != 0) {
                 return DET_ERR;
             }
-            determinant *= -1;
+            temp_det = temp_det + sign * origin_matrix[i][0] * recursive_det(temp_matrix, new_m_size);
+            sign = -sign;
         }
-
-        for(size_t j = i + 1; j < matrix->cols; j++)
-        {
-            if(temp_matrix->matrix[j][i] != 0)
-            {
-                double multiplier = 1 / temp_matrix->matrix[i][i] * temp_matrix->matrix[j][i];
-                for(size_t k = i; k < temp_matrix->cols; k++)
-                {
-                    temp_matrix->matrix[j][k] -= temp_matrix->matrix[i][k] * multiplier;
-                }
-            }
-        }
-        determinant *= temp_matrix->matrix[i][i];
     }
-    *val = determinant;
+    for (size_t i = 0; i < m_size; ++i) {
+        free(temp_matrix[i]);
+    }
+    free(temp_matrix);
+    return(temp_det);
+}
+
+int det(const Matrix* matrix, double* val) {
+    *val = recursive_det(matrix->matrix, matrix->rows);
     return 0;
 }
 
 Matrix* adj(const Matrix* matrix) {
     Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
+    for (size_t i = 0;i<matrix->rows;++i) {
+      for (size_t j = 0; j<matrix->cols; ++j) {
+        temp_matrix->matrix[i][j] = matrix->matrix[i][j];
+      } 
+    }
+    int sign = 1;
+    for (size_t i = 0; i < temp_matrix->rows; ++i) {
+        for (size_t j = 0; j < temp_matrix->cols; ++j) {
+            Matrix* additions_matrix = create_matrix(temp_matrix->rows - 1, temp_matrix->cols - 1);
+            if (minus_row_col(matrix->matrix, additions_matrix->matrix, j, i, temp_matrix->rows) != 0) {
+                return NULL;
+            }
+            if ((i + j) % 2 == 0) {
+                sign = 1;
+            } else {
+                sign = -1;
+            }
+            double temp_det;
+            det(additions_matrix, &temp_det);
+            temp_matrix->matrix[i][j] = sign * temp_det;
+        }
+    }
     return temp_matrix;
 }
 
 Matrix* inv(const Matrix* matrix) {
-    Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
+    if (matrix->cols == 1) {
+        Matrix* temp_matrix = create_matrix(1, 1);
+        temp_matrix->matrix[0][0] = 1 / matrix->matrix[0][0];
+        return temp_matrix;
+    }
+    Matrix* temp_matrix = mul_scalar(adj(matrix), (1 / recursive_det(matrix->matrix, matrix->rows)));
     return temp_matrix;
 }
