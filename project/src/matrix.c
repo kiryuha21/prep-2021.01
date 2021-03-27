@@ -13,7 +13,7 @@ Matrix* create_matrix(size_t rows, size_t cols) {
         return NULL;
     }
     temp_matrix->matrix = (double**)test_ptr_1;
-    for (size_t i = 0;i < rows;++i) {
+    for (size_t i = 0; i < rows; ++i) {
         void* test_ptr_2 = malloc(cols * sizeof(double));
         if (test_ptr_2 == NULL) {
             return NULL;
@@ -38,7 +38,7 @@ int free_matrix(Matrix* matrix) {
         free(matrix->matrix[i]);
     }
     free(matrix->matrix);
-    free(matrix);	
+    free(matrix);
     return 0;
 }
 
@@ -63,14 +63,14 @@ Matrix* create_matrix_from_file(const char* path_file) {
         return NULL;
     }
     temp_matrix->matrix = (double**)test_ptr_1;
-    for (size_t i = 0;i < temp_matrix->rows;++i) {
+    for (size_t i = 0; i < temp_matrix->rows; ++i) {
         void* test_ptr_2 = malloc(temp_matrix->cols * sizeof(double));
         if (test_ptr_2 == NULL) {
             fclose(matrix_file);
             return NULL;
         }
         temp_matrix->matrix[i] = (double*)test_ptr_2;
-        for (size_t j = 0;j <temp_matrix->cols;++j) {
+        for (size_t j = 0; j <temp_matrix->cols; ++j) {
             if (fscanf(matrix_file, "%lf", &temp_matrix->matrix[i][j]) != 1) {
                 fclose(matrix_file);
                 return NULL;
@@ -176,10 +176,16 @@ double recursive_det(double **origin_matrix, size_t m_size) {
     size_t new_m_size = m_size - 1;
     double **temp_matrix, temp_det = 0;
     temp_matrix = (double**)malloc(sizeof(double)*m_size);
+    if (temp_matrix == NULL) {
+        exit(-1);
+    }
     for (size_t i = 0; i < m_size; ++i) {
         temp_matrix[i] = (double*)malloc(sizeof(double) * m_size);
+        if (temp_matrix[i] == NULL) {
+        exit(-1);
     }
-    if (m_size<1) {
+    }
+    if (m_size < 1) {
         for (size_t i = 0; i < m_size; ++i) {
             free(temp_matrix[i]);
         }
@@ -202,7 +208,7 @@ double recursive_det(double **origin_matrix, size_t m_size) {
         free(temp_matrix);
         return(temp_det);
     }
-    if (m_size>2) {
+    if (m_size > 2) {
         int sign = 1;
         for (size_t i = 0; i < m_size; ++i) {
             if (minus_row_col(origin_matrix, temp_matrix, i, 0, m_size) != 0) {
@@ -226,10 +232,10 @@ int det(const Matrix* matrix, double* val) {
 
 Matrix* adj(const Matrix* matrix) {
     Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
-    for (size_t i = 0;i<matrix->rows;++i) {
-      for (size_t j = 0; j<matrix->cols; ++j) {
+    for (size_t i = 0; i < matrix->rows; ++i) {
+      for (size_t j = 0; j < matrix->cols; ++j) {
         temp_matrix->matrix[i][j] = matrix->matrix[i][j];
-      } 
+      }
     }
     int sign = 1;
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
