@@ -5,8 +5,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define CREATE_ERR (-1)
+#define GET_ERR    (-2)
+#define SET_ERR    (-3)
+#define DET_ERR    (-4)
+#define TRANSP_ERR (-5)
+#define SUM_ERR    (-6)
+#define FREE_ERR   (-7)
+#define SUB_ERR    (-8)
+#define MUL_ERR    (-9)
+#define INV_ERR    (-10)
+
+
 typedef struct Matrix {
-    double** matrix;
+    double** matrix_content;
     size_t rows;
     size_t cols;
 } Matrix;
@@ -14,6 +26,7 @@ typedef struct Matrix {
 // support functions
 double recursive_det(double **mas, size_t m);
 int minus_row_col(double **mas, double **p, size_t i, size_t j, size_t m);
+int free_matrix_content(double** matrix, size_t rows);
 
 // Init/release operations
 Matrix* create_matrix_from_file(const char* path_file);
