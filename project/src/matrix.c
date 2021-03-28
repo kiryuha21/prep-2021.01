@@ -5,17 +5,23 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     if (test_ptr_m == NULL) {
         return NULL;
     }
+
     Matrix* temp_matrix = (Matrix*)test_ptr_m;
     temp_matrix->rows = rows;
     temp_matrix->cols = cols;
-    void** test_ptr_1 = (void**)malloc(rows * sizeof(double));
+
+    void** test_ptr_1 = (void**)malloc(rows * sizeof(double*));
     if (test_ptr_1 == NULL) {
+        free(test_ptr_m);
         return NULL;
     }
     temp_matrix->matrix = (double**)test_ptr_1;
+
     for (size_t i = 0; i < rows; ++i) {
         void* test_ptr_2 = malloc(cols * sizeof(double));
         if (test_ptr_2 == NULL) {
+            free(test_ptr_1);
+            free(test_ptr_m);
             return NULL;
         }
         temp_matrix->matrix[i] = (double*)test_ptr_2;
@@ -23,13 +29,61 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     return temp_matrix;
 }
 
+Matrix* create_matrix_from_file(const char* path_file) {
+    FILE* matrix_file = fopen(path_file, "r");
+    if (matrix_file == NULL) {
+        return NULL;
+    }
+
+    void* test_ptr_m = malloc(sizeof(struct Matrix));
+    if (test_ptr_m == NULL) {
+        fclose(matrix_file);
+        return NULL;
+    }
+    Matrix* temp_matrix = (Matrix*)test_ptr_m;
+    if (fscanf(matrix_file, "%zu %zu", &temp_matrix->rows, &temp_matrix->cols) != 2) {
+        fclose(matrix_file);
+        free(temp_matrix);
+        return NULL;
+    }
+    void** test_ptr_1 = (void**)malloc(temp_matrix->rows * sizeof(double));
+    if (test_ptr_1 == NULL) {
+        fclose(matrix_file);
+        free(temp_matrix);
+        return NULL;
+    }
+    temp_matrix->matrix = (double**)test_ptr_1;
+    for (size_t i = 0; i < temp_matrix->rows; ++i) {
+        void* test_ptr_2 = malloc(temp_matrix->cols * sizeof(double));
+        if (test_ptr_2 == NULL) {
+            fclose(matrix_file);
+            free(temp_matrix->matrix);
+            free(temp_matrix);
+            return NULL;
+        }
+        temp_matrix->matrix[i] = (double*)test_ptr_2;
+        for (size_t j = 0; j <temp_matrix->cols; ++j) {
+            if (fscanf(matrix_file, "%lf", &temp_matrix->matrix[i][j]) != 1) {
+                free(temp_matrix->matrix);
+                free(temp_matrix);
+                fclose(matrix_file);
+                return NULL;
+            }
+        }
+    }
+    if (fclose(matrix_file) != 0) {
+        return NULL;
+    }
+    return temp_matrix;
+}
+
 int get_rows(const Matrix* matrix, size_t* rows) {
-    (*rows) = matrix->rows;
+    *rows = matrix->rows;
     return 0;
 }
 
 int get_cols(const Matrix* matrix, size_t* cols) {
-    (*cols) = matrix->cols;
+    *cols = matrix->cols;
     return 0;
 }
 
@@ -42,49 +96,8 @@ int free_matrix(Matrix* matrix) {
     return 0;
 }
 
-Matrix* create_matrix_from_file(const char* path_file) {
-    FILE* matrix_file;
-    void* test_ptr_m = malloc(sizeof(struct Matrix));
-    if (test_ptr_m == NULL) {
-        return NULL;
-    }
-    Matrix* temp_matrix = (Matrix*)test_ptr_m;
-    matrix_file = fopen(path_file, "r");
-    if (matrix_file == NULL) {
-        return NULL;
-    }
-    if (fscanf(matrix_file, "%zu %zu", &temp_matrix->rows, &temp_matrix->cols) != 2) {
-        fclose(matrix_file);
-        return NULL;
-    }
-    void** test_ptr_1 = (void**)malloc(temp_matrix->rows * sizeof(double));
-    if (test_ptr_1 == NULL) {
-        fclose(matrix_file);
-        return NULL;
-    }
-    temp_matrix->matrix = (double**)test_ptr_1;
-    for (size_t i = 0; i < temp_matrix->rows; ++i) {
-        void* test_ptr_2 = malloc(temp_matrix->cols * sizeof(double));
-        if (test_ptr_2 == NULL) {
-            fclose(matrix_file);
-            return NULL;
-        }
-        temp_matrix->matrix[i] = (double*)test_ptr_2;
-        for (size_t j = 0; j <temp_matrix->cols; ++j) {
-            if (fscanf(matrix_file, "%lf", &temp_matrix->matrix[i][j]) != 1) {
-                fclose(matrix_file);
-                return NULL;
-            }
-        }
-    }
-    if (fclose(matrix_file) != 0) {
-        return NULL;
-    }
-    return temp_matrix;
-}
-
 int get_elem(const Matrix* matrix, size_t row, size_t col, double* val) {
-    (*val) = matrix->matrix[row][col];
+    *val = matrix->matrix[row][col];
     return 0;
 }
 
@@ -173,50 +186,37 @@ int minus_row_col(double **origin_matrix, double **temp_matrix, size_t row, size
 }
 
 double recursive_det(double **origin_matrix, size_t m_size) {
-    size_t new_m_size = m_size - 1;
-    double **temp_matrix, temp_det = 0;
-    temp_matrix = (double**)malloc(sizeof(double)*m_size);
-    if (temp_matrix == NULL) {
-        exit(-1);
-    }
-    for (size_t i = 0; i < m_size; ++i) {
-        temp_matrix[i] = (double*)malloc(sizeof(double) * m_size);
-        if (temp_matrix[i] == NULL) {
-        exit(-1);
-    }
-    }
+    double temp_det = 0;
     if (m_size < 1) {
-        for (size_t i = 0; i < m_size; ++i) {
-            free(temp_matrix[i]);
-        }
-        free(temp_matrix);
-        return DET_ERR;
+        return 0;
     }
     if (m_size == 1) {
         temp_det = origin_matrix[0][0];
-        for (size_t i = 0; i < m_size; ++i) {
-            free(temp_matrix[i]);
-        }
-        free(temp_matrix);
         return(temp_det);
     }
     if (m_size == 2) {
         temp_det = origin_matrix[0][0] * origin_matrix[1][1] - (origin_matrix[1][0] * origin_matrix[0][1]);
-        for (size_t i = 0; i < m_size; ++i) {
-            free(temp_matrix[i]);
-        }
-        free(temp_matrix);
         return(temp_det);
     }
-    if (m_size > 2) {
-        int sign = 1;
-        for (size_t i = 0; i < m_size; ++i) {
-            if (minus_row_col(origin_matrix, temp_matrix, i, 0, m_size) != 0) {
-                return DET_ERR;
-            }
-            temp_det = temp_det + sign * origin_matrix[i][0] * recursive_det(temp_matrix, new_m_size);
-            sign = -sign;
+    double** temp_matrix = (double**)malloc(sizeof(double*)*m_size);
+    if (temp_matrix == NULL) {
+        return 0;
+    }
+
+    for (size_t i = 0; i < m_size; ++i) {
+        temp_matrix[i] = (double*)malloc(sizeof(double) * m_size);
+        if (temp_matrix[i] == NULL) {
+            free(temp_matrix);
+            return 0;
         }
+    }
+    int sign = 1;
+    for (size_t i = 0; i < m_size; ++i) {
+        if (minus_row_col(origin_matrix, temp_matrix, i, 0, m_size) != 0) {
+            return 0;
+        }
+        temp_det = temp_det + sign * origin_matrix[i][0] * recursive_det(temp_matrix, m_size - 1);
+        sign = -sign;
     }
     for (size_t i = 0; i < m_size; ++i) {
         free(temp_matrix[i]);
@@ -232,11 +232,6 @@ int det(const Matrix* matrix, double* val) {
 
 Matrix* adj(const Matrix* matrix) {
     Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
-    for (size_t i = 0; i < matrix->rows; ++i) {
-      for (size_t j = 0; j < matrix->cols; ++j) {
-        temp_matrix->matrix[i][j] = matrix->matrix[i][j];
-      }
-    }
     int sign = 1;
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
         for (size_t j = 0; j < temp_matrix->cols; ++j) {
@@ -249,9 +244,9 @@ Matrix* adj(const Matrix* matrix) {
             } else {
                 sign = -1;
             }
-            double temp_det;
-            det(additions_matrix, &temp_det);
-            temp_matrix->matrix[i][j] = sign * temp_det;
+            temp_matrix->matrix[i][j] = sign * recursive_det(additions_matrix->matrix,
+                                                             additions_matrix->rows);
+            free_matrix(additions_matrix);
         }
     }
     return temp_matrix;
@@ -263,6 +258,8 @@ Matrix* inv(const Matrix* matrix) {
         temp_matrix->matrix[0][0] = 1 / matrix->matrix[0][0];
         return temp_matrix;
     }
-    Matrix* temp_matrix = mul_scalar(adj(matrix), (1 / recursive_det(matrix->matrix, matrix->rows)));
+    Matrix* adj_temp = adj(matrix);
+    Matrix* temp_matrix = mul_scalar(adj_temp, (1 / recursive_det(matrix->matrix, matrix->rows)));
+    free_matrix(adj_temp);
     return temp_matrix;
 }

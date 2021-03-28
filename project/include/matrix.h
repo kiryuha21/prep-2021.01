@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define DET_ERR (-1)
-
 typedef struct Matrix {
     double** matrix;
     size_t rows;
