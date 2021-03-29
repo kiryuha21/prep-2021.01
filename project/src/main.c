@@ -2,7 +2,7 @@
 
 
 int main(void) {
-	Matrix* first_test_matrix = create_matrix_from_file("matrix_ex.dat");
+    Matrix* first_test_matrix = create_matrix_from_file("matrix_ex.dat");
     if (first_test_matrix == NULL) {
         return CREATE_ERR;
     }

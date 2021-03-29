@@ -78,18 +78,16 @@ int get_rows(const Matrix* matrix, size_t* rows) {
     if (matrix != NULL && rows != NULL) {
         *rows = matrix->rows;
         return 0;
-    } else {
-        return GET_ERR;
     }
+    return GET_ERR;
 }
 
 int get_cols(const Matrix* matrix, size_t* cols) {
     if (matrix != NULL && cols != NULL) {
         *cols = matrix->cols;
         return 0;
-    } else {
-        return GET_ERR;
     }
+    return GET_ERR;
 }
 
 int free_matrix_content(double** matrix, size_t rows) {
@@ -114,18 +112,16 @@ int get_elem(const Matrix* matrix, size_t row, size_t col, double* val) {
     if (matrix != NULL && val != NULL) {
         *val = matrix->matrix_content[row][col];
         return 0;
-    } else {
-        return GET_ERR;
     }
+    return GET_ERR;
 }
 
 int set_elem(Matrix* matrix, size_t row, size_t col, double val) {
     if (matrix != NULL) {
         matrix->matrix_content[row][col] = val;
         return 0;
-    } else {
-        return SET_ERR;
     }
+    return SET_ERR;
 }
 
 Matrix* mul_scalar(const Matrix* matrix, double val) {
@@ -284,7 +280,7 @@ double recursive_det(double **origin_matrix, size_t m_size) {
 }
 
 int det(const Matrix* matrix, double* val) {
-    if (matrix == NULL) {
+    if (matrix == NULL && val != NULL) {
         return DET_ERR;
     }
     *val = recursive_det(matrix->matrix_content, matrix->rows);

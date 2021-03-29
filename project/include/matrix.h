@@ -24,8 +24,8 @@ typedef struct Matrix {
 } Matrix;
 
 // support functions
-double recursive_det(double **mas, size_t m);
-int minus_row_col(double **mas, double **p, size_t i, size_t j, size_t m);
+double recursive_det(double **origin_matrix, size_t m_size);
+int minus_row_col(double **origin_matrix, double **temp_matrix, size_t row, size_t col, size_t m_size);
 int free_matrix_content(double** matrix, size_t rows);
 
 // Init/release operations
