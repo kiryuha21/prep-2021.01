@@ -8,7 +8,7 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     temp_matrix->rows = rows;
     temp_matrix->cols = cols;
 
-    temp_matrix->matrix_content = (double**)(void**)malloc(rows * sizeof(double*));
+    temp_matrix->matrix_content = (double**)malloc(rows * sizeof(double*));
     if (temp_matrix->matrix_content == NULL) {
         free(temp_matrix);
         return NULL;
