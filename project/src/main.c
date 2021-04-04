@@ -12,13 +12,45 @@ int main(int argc, const char **argv) {
         return OPEN_ERR;
     }
 
-    char *from, *to, *date, *boundary;
+    char *from = (char*)(malloc(sizeof(char)* 2400000));
+    if (from == NULL) {
+        fclose(mail);
+        return ALLOC_ERR;
+    }
+
+    char *to = (char*)(malloc(sizeof(char)* 2400000));
+    if (to == NULL) {
+        fclose(mail);
+        free(from);
+        return ALLOC_ERR;
+    }
+
+    char *date = (char*)(malloc(sizeof(char)* 1024));
+    if (date == NULL) {
+        free(to);
+        free(from);
+        fclose(mail);
+        return ALLOC_ERR;
+    }
+
+    char *boundary = (char*)(malloc(sizeof(char)* 1024));
+    if (date == NULL) {
+        free(to);
+        free(from);
+        free(date);
+        fclose(mail);
+        return ALLOC_ERR;
+    }
 
     int parts = 0, amount;
 
     char* line = (char*)(malloc(sizeof(char)*2400000));
     if (line == NULL) {
         fclose(mail);
+        free(to);
+        free(from);
+        free(date);
+        free(boundary);
         return ALLOC_ERR;
     }
 
@@ -74,59 +106,17 @@ int main(int argc, const char **argv) {
         char *pointer;
         if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
             from = delete_fspaces(remove_segue(pointer + 5, &amount));
-            if (from == NULL) {
-                if (to != NULL) {
-                    free(to);
-                }
-                if (date != NULL) {
-                    free(date);
-                }
-                if (boundary != NULL) {
-                    free(boundary);
-                }
-                free(line);
-                fclose(mail);
-                return ALLOC_ERR;
-            }
             from_fl = true;
         }
 
         if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
             to = remove_segue(pointer + 4, &amount);
-            if (to == NULL) {
-                if (from != NULL) {
-                    free(from);
-                }
-                if (date != NULL) {
-                    free(date);
-                }
-                if (boundary != NULL) {
-                    free(boundary);
-                }
-                free(line);
-                fclose(mail);
-                return ALLOC_ERR;
-            }
             to_fl = true;
         }
 
         if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
             date = remove_segue(pointer + 6, &amount);
             date_fl = true;
-            if (date == NULL) {
-                if (to != NULL) {
-                    free(to);
-                }
-                if (from != NULL) {
-                    free(from);
-                }
-                if (boundary != NULL) {
-                    free(boundary);
-                }
-                free(line);
-                fclose(mail);
-                return ALLOC_ERR;
-            }
         }
 
         if (!boundary_set) {
@@ -138,20 +128,6 @@ int main(int argc, const char **argv) {
                 char* temp_boundary = copy_from(line, index + 1);
                 char* to_shorten_line = delete_semicolon(remove_segue(temp_boundary, &amount));
                 boundary = delete_spaces(remove_quotes(to_shorten_line));
-                if (boundary == NULL) {
-                    if (to != NULL) {
-                        free(to);
-                    }
-                    if (date != NULL) {
-                        free(date);
-                    }
-                    if (from != NULL) {
-                        free(from);
-                    }
-                    free(line);
-                    fclose(mail);
-                    return ALLOC_ERR;
-                }
                 boundary_set = true;
             }
         }
@@ -180,30 +156,17 @@ int main(int argc, const char **argv) {
     if (empty_lines) {
         parts = 0;
     } else {
-        if (!boundary_set) {
+        if (!strcmp(boundary, "")) {
             parts = 1;
         }
     }
-
-    if (to == NULL) {
-        to = (char*)malloc(sizeof(char));
-    }
-    if (date == NULL) {
-        date = (char*)malloc(sizeof(char));
-    }
-    if (from == NULL) {
-        from = (char*)malloc(sizeof(char));
-    }
-
     printf("%s|%s|%s|%d", from, to, date, parts);
 
     fclose(mail);
     free(to);
     free(date);
-    free(from);
     free(line);
-    if (boundary_set) {
-        free(boundary);
-    }
+    free(boundary);
+    free(from);
     return 0;
 }
