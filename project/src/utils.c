@@ -40,7 +40,9 @@ char* add_inf_check(char* main_info, char* add_info) {
     for (size_t i = 0; i < strlen(main_info); ++i) {
         temp[i] = main_info[i];
     }
-    for (size_t i = size + strlen(main_info); i < strlen(main_info) + strlen(add_info) - amount + size + 2; ++i) {
+    for (size_t i = size + strlen(main_info);
+                i < strlen(main_info) + strlen(add_info) - amount + size + 2;
+                ++i) {
         temp[i] = add_info[i - strlen(main_info)];
     }
     return temp;
@@ -91,19 +93,6 @@ char* tolower_w(char* original) {
     return temp;
 }
 
-char* remove_equal(char* original) {
-    if (strchr(original, '=') == NULL) {
-        return original;
-    }
-    char* temp = (char*)malloc(sizeof(char) * (strlen(original)));
-    size_t pos;
-    for (pos = 0; original[pos] != '=' ; ++pos) { }
-    ++pos;
-    for (size_t i = pos; i < strlen(original); ++i) {
-        temp[i - pos] = original[i];
-    }
-    return temp;
-}
 
 size_t find_last_index(char* original, char* to_find) {
     char* pointer;

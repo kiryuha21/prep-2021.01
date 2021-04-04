@@ -17,7 +17,6 @@ char* delete_fspaces(char* original);
 char* delete_semicolon(char* original);
 char* tolower_w(char* original);
 size_t find_last_index(char* original, char* to_find);
-char* remove_equal(char* original);
 char* copy_from(char* original, size_t index);
 
 #endif  // PROJECT_INCLUDE_UTILS_H_

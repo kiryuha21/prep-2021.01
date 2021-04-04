@@ -8,13 +8,17 @@ int main(int argc, const char **argv) {
     const char *path_to_eml = argv[1];
 
     char* from = (char*)(malloc(sizeof(char) * 2400000)),
-    *to = (char*)(malloc(sizeof(char) * 2400000)), 
-    *date = (char*)(malloc(sizeof(char) * 1024)), 
-    *boundary = (char*)(malloc(sizeof(char) * 1024));
+         *to = (char*)(malloc(sizeof(char) * 2400000)),
+         *date = (char*)(malloc(sizeof(char) * 1024)),
+         *boundary = (char*)(malloc(sizeof(char) * 1024));
 
     int parts = 0, amount;
     FILE* mail = fopen(path_to_eml, "r");
     if (mail == NULL) {
+        free(to);
+        free(date);
+        free(boundary);
+        free(from);
         return OPEN_ERR;
     }
 
@@ -87,10 +91,13 @@ int main(int argc, const char **argv) {
 
         if (!boundary_set) {
             char* temp_line = tolower_w(line);
-            if (strstr(temp_line, "boundary=") != NULL) {
+            if (strstr(temp_line, " boundary=") != NULL ||
+                strstr(temp_line, "\tboundary=") != NULL ||
+                strstr(temp_line, ";boundary=") != NULL) {
                 size_t index = find_last_index(temp_line, "boundary=");
                 char* temp_boundary = copy_from(line, index + 1);
-                boundary = delete_spaces(remove_quotes(delete_semicolon(remove_segue(temp_boundary, &amount))));
+                char* to_shorten_line = delete_semicolon(remove_segue(temp_boundary, &amount));
+                boundary = delete_spaces(remove_quotes(to_shorten_line));
                 boundary_set = true;
             }
         }
@@ -112,6 +119,7 @@ int main(int argc, const char **argv) {
             ++parts;
         }
     }
+
     if (empty_lines) {
         parts = 0;
     } else {
@@ -119,10 +127,6 @@ int main(int argc, const char **argv) {
             parts = 1;
         }
     }
-    /* puts(from);
-    puts(to);
-    puts(date);
-    printf("%d\n", parts); */
     printf("%s|%s|%s|%d", from, to, date, parts);
 
     fclose(mail);
