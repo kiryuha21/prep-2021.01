@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+#define ALLOC_ERR (-1)
 #define OPEN_ERR  (-2)
 
 char* remove_quotes(char* original);
