@@ -26,6 +26,9 @@ char* remove_segue(char* original, int* amount) {
     }
     *amount = size;
     char* temp = malloc(sizeof(char) * (orig_len - size + 1));
+    for (size_t i = 0; i < orig_len - size + 1; ++i) {
+        temp[i] = '\0';
+    }
     if (temp == NULL) {
         return NULL;
     }
