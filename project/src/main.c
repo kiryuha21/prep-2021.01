@@ -164,6 +164,9 @@ int main(int argc, const char **argv) {
         fgets(line, 2400000, mail);
         if (strlen(line) > 1) {
             empty_lines = false;
+            if (!boundary_set) {
+                break;
+            }
         }
 
         if (boundary_set) {
