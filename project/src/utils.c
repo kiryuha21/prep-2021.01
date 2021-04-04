@@ -69,3 +69,58 @@ char* delete_semicolon(char* original) {
     }
     return temp;
 }
+
+char* delete_fspaces(char* original) {
+    if (original[0] != ' ') {
+        return original;
+    }
+    char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    size_t pos;
+    for (pos = 0; original[pos] == ' ' ; ++pos) { }
+    for (size_t i = pos; i < strlen(original); ++i) {
+        temp[i - pos] = original[i];
+    }
+    return temp;
+}
+
+char* tolower_w(char* original) {
+    char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    for (size_t i = 0; i < strlen(original); ++i) {
+        temp[i] = (char)tolower(original[i]);
+    }
+    return temp;
+}
+
+char* remove_equal(char* original) {
+    if (strchr(original, '=') == NULL) {
+        return original;
+    }
+    char* temp = (char*)malloc(sizeof(char) * (strlen(original)));
+    size_t pos;
+    for (pos = 0; original[pos] != '=' ; ++pos) { }
+    ++pos;
+    for (size_t i = pos; i < strlen(original); ++i) {
+        temp[i - pos] = original[i];
+    }
+    return temp;
+}
+
+size_t find_last_index(char* original, char* to_find) {
+    char* pointer;
+    if ((pointer = strstr(original, to_find)) == NULL) {
+        return -1;
+    }
+    size_t index;
+    char* or_pointer = original;
+    for (index = 0; or_pointer != pointer; ++index, ++or_pointer) { }
+    index += strlen(to_find);
+    return index - 1;
+}
+
+char* copy_from(char* original, size_t index) {
+    char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    for (size_t i = index; i < strlen(original); ++i) {
+        temp[i - index] = original[i];
+    }
+    return temp;
+}

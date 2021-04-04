@@ -20,7 +20,7 @@ int main(int argc, const char **argv) {
 
     char* line = (char*)(malloc(sizeof(char)*2400000));
 
-    bool from_fl = false, to_fl = false, date_fl = false;
+    bool from_fl = false, to_fl = false, date_fl = false, boundary_set = false;
 
     // header processing
 
@@ -70,43 +70,45 @@ int main(int argc, const char **argv) {
         }
 
         char *pointer;
-        if ((pointer = strstr(line, "From: ")) != NULL) {
-            from = remove_segue(pointer + 6, &amount);
+        if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
+            from = delete_fspaces(remove_segue(pointer + 5, &amount));
             from_fl = true;
         }
 
-        if ((pointer = strstr(line, "To: ")) != NULL && line[0] == 'T') {
+        if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
             to = remove_segue(pointer + 4, &amount);
             to_fl = true;
         }
 
-        if ((pointer = strstr(line, "Date: ")) != NULL) {
+        if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
             date = remove_segue(pointer + 6, &amount);
             date_fl = true;
         }
 
-        if ((pointer = strstr(line, "boundary=")) != NULL) {
-            boundary = delete_spaces(remove_quotes(delete_semicolon(remove_segue(pointer + 9, &amount))));
+        if (!boundary_set) {
+            char* temp_line = tolower_w(line);
+            if (strstr(temp_line, "boundary=") != NULL) {
+                size_t index = find_last_index(temp_line, "boundary=");
+                char* temp_boundary = copy_from(line, index + 1);
+                boundary = delete_spaces(remove_quotes(delete_semicolon(remove_segue(temp_boundary, &amount))));
+                boundary_set = true;
+            }
         }
     }
 
     // body processing
 
     bool empty_lines = true;
-    bool r_symbols = false;
     while (!feof(mail)) {
         fgets(line, 2400000, mail);
         if (strlen(line) > 1) {
             empty_lines = false;
         }
-        if (line[strlen(line) - 2] == '\r') {
-            r_symbols = true;
-        }
 
         if (strstr(line, boundary) != NULL &&
             strcmp(boundary, "") != 0) {
-            if ((r_symbols && strlen(boundary) == strlen(line) - 4) ||
-            (!r_symbols && strlen(boundary) == strlen(line) - 3))
+            if ((amount == 2 && strlen(boundary) == strlen(line) - 4) ||
+            (amount == 1 && strlen(boundary) == strlen(line) - 3))
             ++parts;
         }
     }
