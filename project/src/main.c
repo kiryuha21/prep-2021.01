@@ -84,9 +84,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
-                if (line != NULL) {
-                    free(line);
-                }
+                free(line);
                 fclose(mail);
                 return ALLOC_ERR;
             }
@@ -105,9 +103,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
-                if (line != NULL) {
-                    free(line);
-                }
+                free(line);
                 fclose(mail);
                 return ALLOC_ERR;
             }
@@ -127,9 +123,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
-                if (line != NULL) {
-                    free(line);
-                }
+                free(line);
                 fclose(mail);
                 return ALLOC_ERR;
             }
@@ -154,9 +148,7 @@ int main(int argc, const char **argv) {
                     if (from != NULL) {
                         free(from);
                     }
-                    if (line != NULL) {
-                        free(line);
-                    }
+                    free(line);
                     fclose(mail);
                     return ALLOC_ERR;
                 }
