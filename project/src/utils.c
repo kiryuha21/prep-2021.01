@@ -5,10 +5,14 @@ char* remove_quotes(char* original) {
         return original;
     }
     char* temp = malloc(sizeof(char) * (strlen(original)));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 1; i < strlen(original) - 1; ++i) {
         temp[i - 1] = original[i];
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 char* remove_segue(char* original, int* amount) {
@@ -20,10 +24,14 @@ char* remove_segue(char* original, int* amount) {
     }
     *amount = size;
     char* temp = malloc(sizeof(char) * (strlen(original)));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 0; i < strlen(original) - size; ++i) {
         temp[i] = original[i];
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 char* add_inf_check(char* main_info, char* add_info) {
@@ -37,6 +45,9 @@ char* add_inf_check(char* main_info, char* add_info) {
     }
     add_info = remove_segue(add_info, &amount);
     char* temp = (char*)malloc(sizeof(char) * (strlen(main_info) + strlen(add_info) + 1));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 0; i < strlen(main_info); ++i) {
         temp[i] = main_info[i];
     }
@@ -54,12 +65,16 @@ char* delete_spaces(char* original) {
         return original;
     }
     char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 0; i < strlen(original); ++i) {
         if (original[i] != ' ') {
             temp[i] = original[i];
         }
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 char* delete_semicolon(char* original) {
@@ -67,10 +82,14 @@ char* delete_semicolon(char* original) {
         return original;
     }
     char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 0; original[i] != ';'; ++i) {
         temp[i] = original[i];
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 char* delete_fspaces(char* original) {
@@ -78,20 +97,28 @@ char* delete_fspaces(char* original) {
         return original;
     }
     char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    if (temp == NULL) {
+        return NULL;
+    }
     size_t pos;
     for (pos = 0; original[pos] == ' ' ; ++pos) { }
     for (size_t i = pos; i < strlen(original); ++i) {
         temp[i - pos] = original[i];
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 char* tolower_w(char* original) {
     char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = 0; i < strlen(original); ++i) {
         temp[i] = (char)tolower(original[i]);
     }
-    return temp;
+    original = temp;
+    return original;
 }
 
 
@@ -109,9 +136,12 @@ size_t find_last_index(char* original, char* to_find) {
 
 char* copy_from(char* original, size_t index) {
     char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    if (temp == NULL) {
+        return NULL;
+    }
     for (size_t i = index; i < strlen(original); ++i) {
         temp[i - index] = original[i];
     }
-    return temp;
+    original = temp;
+    return original;
 }
-
