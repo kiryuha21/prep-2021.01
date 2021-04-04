@@ -34,7 +34,7 @@ int main(int argc, const char **argv) {
     }
 
     char *boundary = (char*)(malloc(sizeof(char)* 1024));
-    if (date == NULL) {
+    if (boundary == NULL) {
         free(to);
         free(from);
         free(date);
