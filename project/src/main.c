@@ -34,11 +34,11 @@ int main(int argc, const char **argv) {
 
         if (from_fl) {
             while (true) {
-                char* temp_from = add_inf_check(from, line);
-                if (temp_from == line) {
+                char* temp = add_inf_check(from, line);
+                if (temp == line) {
                     break;
                 } else {
-                    from = temp_from;
+                    from = temp;
                     fgets(line, 2400000, mail);
                 }
             }
@@ -47,11 +47,11 @@ int main(int argc, const char **argv) {
 
         if (to_fl) {
             while (true) {
-                char* temp_to = add_inf_check(to, line);
-                if (temp_to == line) {
+                char* temp = add_inf_check(to, line);
+                if (temp == line) {
                     break;
                 } else {
-                    to = temp_to;
+                    to = temp;
                     fgets(line, 2400000, mail);
                 }
             }
@@ -60,11 +60,11 @@ int main(int argc, const char **argv) {
 
         if (date_fl) {
             while (true) {
-                char* temp_date = add_inf_check(date, line);
-                if (temp_date == line) {
+                char* temp = add_inf_check(date, line);
+                if (temp == line) {
                     break;
                 } else {
-                    date = temp_date;
+                    date = temp;
                     fgets(line, 2400000, mail);
                 }
             }
@@ -78,12 +78,14 @@ int main(int argc, const char **argv) {
                 if (to != NULL) {
                     free(to);
                 }
-                free(line);
                 if (date != NULL) {
                     free(date);
                 }
                 if (boundary != NULL) {
                     free(boundary);
+                }
+                if (line != NULL) {
+                    free(line);
                 }
                 fclose(mail);
                 return ALLOC_ERR;
@@ -97,12 +99,14 @@ int main(int argc, const char **argv) {
                 if (from != NULL) {
                     free(from);
                 }
-                free(line);
                 if (date != NULL) {
                     free(date);
                 }
                 if (boundary != NULL) {
                     free(boundary);
+                }
+                if (line != NULL) {
+                    free(line);
                 }
                 fclose(mail);
                 return ALLOC_ERR;
@@ -112,21 +116,23 @@ int main(int argc, const char **argv) {
 
         if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
             date = remove_segue(pointer + 6, &amount);
+            date_fl = true;
             if (date == NULL) {
                 if (to != NULL) {
                     free(to);
                 }
-                free(line);
                 if (from != NULL) {
                     free(from);
                 }
                 if (boundary != NULL) {
                     free(boundary);
                 }
+                if (line != NULL) {
+                    free(line);
+                }
                 fclose(mail);
                 return ALLOC_ERR;
             }
-            date_fl = true;
         }
 
         if (!boundary_set) {
@@ -142,12 +148,14 @@ int main(int argc, const char **argv) {
                     if (to != NULL) {
                         free(to);
                     }
-                    free(line);
+                    if (date != NULL) {
+                        free(date);
+                    }
                     if (from != NULL) {
                         free(from);
                     }
-                    if (date != NULL) {
-                        free(date);
+                    if (line != NULL) {
+                        free(line);
                     }
                     fclose(mail);
                     return ALLOC_ERR;
@@ -169,13 +177,11 @@ int main(int argc, const char **argv) {
             }
         }
 
-        if (boundary_set) {
-            if (strstr(line, boundary) != NULL &&
-                strcmp(boundary, "") != 0) {
-                if ((amount == 2 && strlen(boundary) == strlen(line) - 4) ||
-                    (amount == 1 && strlen(boundary) == strlen(line) - 3))
-                    ++parts;
-            }
+        if (strstr(line, boundary) != NULL &&
+            strcmp(boundary, "") != 0) {
+            if ((amount == 2 && strlen(boundary) == strlen(line) - 4) ||
+                (amount == 1 && strlen(boundary) == strlen(line) - 3))
+                ++parts;
         }
     }
 
@@ -186,23 +192,24 @@ int main(int argc, const char **argv) {
             parts = 1;
         }
     }
+
     if (to == NULL) {
         to = (char*)malloc(sizeof(char));
     }
-    if (from == NULL) {
-        from = (char*)malloc(sizeof(char));
-    }
     if (date == NULL) {
         date = (char*)malloc(sizeof(char));
+    }
+    if (from == NULL) {
+        from = (char*)malloc(sizeof(char));
     }
 
     printf("%s|%s|%s|%d", from, to, date, parts);
 
     fclose(mail);
     free(to);
-    free(line);
     free(date);
     free(from);
+    free(line);
     if (boundary_set) {
         free(boundary);
     }
