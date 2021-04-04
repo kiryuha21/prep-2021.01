@@ -158,17 +158,23 @@ int main(int argc, const char **argv) {
     bool empty_lines = true;
     while (!feof(mail)) {
         fgets(line, 2400000, mail);
-        if (strlen(line) > 1) {
+
+        size_t line_len = strlen(line);
+
+        if (line_len > 1) {
             empty_lines = false;
             if (!boundary_set) {
                 break;
             }
         }
 
-        if (strstr(line, boundary) != NULL) {
-            if ((amount == 2 && strlen(boundary) == strlen(line) - 4) ||
-                (amount == 1 && strlen(boundary) == strlen(line) - 3))
-                ++parts;
+        if (boundary_set) {
+            if (strstr(line, boundary) != NULL) {
+                size_t boundary_len = strlen(boundary);
+                if ((amount == 2 && boundary_len == line_len - 4) ||
+                    (amount == 1 && boundary_len == line_len - 3))
+                    ++parts;
+            }
         }
     }
 
@@ -179,6 +185,7 @@ int main(int argc, const char **argv) {
             parts = 1;
         }
     }
+
     if (to == NULL) {
         to = (char*)malloc(sizeof(char));
     }

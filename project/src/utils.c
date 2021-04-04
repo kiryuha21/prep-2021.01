@@ -4,11 +4,12 @@ char* remove_quotes(char* original) {
     if (original[0] != '"') {
         return original;
     }
-    char* temp = malloc(sizeof(char) * (strlen(original)));
+    size_t orig_len = strlen(original);
+    char* temp = malloc(sizeof(char) * (orig_len - 1));
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 1; i < strlen(original) - 1; ++i) {
+    for (size_t i = 1; i < orig_len - 1; ++i) {
         temp[i - 1] = original[i];
     }
     original = temp;
@@ -17,17 +18,18 @@ char* remove_quotes(char* original) {
 
 char* remove_segue(char* original, int* amount) {
     int size;
-    if (original[strlen(original) - 2] == '\r') {
+    size_t orig_len = strlen(original);
+    if (original[orig_len - 2] == '\r') {
         size = 2;
     } else {
         size = 1;
     }
     *amount = size;
-    char* temp = malloc(sizeof(char) * (strlen(original)));
+    char* temp = malloc(sizeof(char) * (orig_len - size + 1));
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 0; i < strlen(original) - size; ++i) {
+    for (size_t i = 0; i < orig_len - size; ++i) {
         temp[i] = original[i];
     }
     original = temp;
@@ -43,18 +45,21 @@ char* add_inf_check(char* main_info, char* add_info) {
     if (add_info[1] == ' ') {
         size = 1;
     }
+    size_t main_len = strlen(main_info);
+    size_t add_len = strlen(add_info);
+
     add_info = remove_segue(add_info, &amount);
-    char* temp = (char*)malloc(sizeof(char) * (strlen(main_info) + strlen(add_info) + 1));
+    char* temp = (char*)malloc(sizeof(char) * (main_len + add_len + 1));
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 0; i < strlen(main_info); ++i) {
+    for (size_t i = 0; i < main_len; ++i) {
         temp[i] = main_info[i];
     }
-    for (size_t i = size + strlen(main_info);
-         i < strlen(main_info) + strlen(add_info) - amount + size + 2;
+    for (size_t i = size + main_len;
+         i < main_len + add_len - amount + size + 2;
          ++i) {
-        temp[i] = add_info[i - strlen(main_info)];
+        temp[i] = add_info[i - main_len];
     }
     free(add_info);
     return temp;
@@ -64,11 +69,12 @@ char* delete_spaces(char* original) {
     if (strchr(original, ' ') == NULL) {
         return original;
     }
-    char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    size_t orig_len = strlen(original);
+    char* temp = (char*)malloc(sizeof(char) * orig_len);
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 0; i < strlen(original); ++i) {
+    for (size_t i = 0; i < orig_len; ++i) {
         if (original[i] != ' ') {
             temp[i] = original[i];
         }
@@ -81,7 +87,8 @@ char* delete_semicolon(char* original) {
     if (strchr(original, ';') == NULL) {
         return original;
     }
-    char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    size_t orig_len = strlen(original);
+    char* temp = (char*)malloc(sizeof(char) * orig_len);
     if (temp == NULL) {
         return NULL;
     }
@@ -96,13 +103,14 @@ char* delete_fspaces(char* original) {
     if (original[0] != ' ') {
         return original;
     }
-    char* temp = (char*)malloc(sizeof(char) * strlen(original));
+    size_t orig_len = strlen(original);
+    char* temp = (char*)malloc(sizeof(char) * orig_len);
     if (temp == NULL) {
         return NULL;
     }
     size_t pos;
     for (pos = 0; original[pos] == ' ' ; ++pos) { }
-    for (size_t i = pos; i < strlen(original); ++i) {
+    for (size_t i = pos; i < orig_len; ++i) {
         temp[i - pos] = original[i];
     }
     original = temp;
@@ -110,11 +118,12 @@ char* delete_fspaces(char* original) {
 }
 
 char* tolower_w(char* original) {
-    char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    size_t orig_len = strlen(original);
+    char* temp = (char*)malloc(sizeof(char) * (orig_len + 1));
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 0; i < strlen(original); ++i) {
+    for (size_t i = 0; i < orig_len; ++i) {
         temp[i] = (char)tolower(original[i]);
     }
     original = temp;
@@ -135,11 +144,12 @@ size_t find_last_index(char* original, char* to_find) {
 }
 
 char* copy_from(char* original, size_t index) {
-    char* temp = (char*)malloc(sizeof(char) * (strlen(original) + 1));
+    size_t orig_len = strlen(original);
+    char* temp = (char*)malloc(sizeof(char) * (orig_len + 1));
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = index; i < strlen(original); ++i) {
+    for (size_t i = index; i < orig_len; ++i) {
         temp[i - index] = original[i];
     }
     original = temp;
