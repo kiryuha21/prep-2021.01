@@ -156,7 +156,7 @@ int main(int argc, const char **argv) {
     if (empty_lines) {
         parts = 0;
     } else {
-        if (!strcmp(boundary, "")) {
+        if (!boundary_set) {
             parts = 1;
         }
     }
