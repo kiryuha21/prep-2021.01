@@ -130,5 +130,9 @@ int main(int argc, const char **argv) {
     printf("%s|%s|%s|%d", from, to, date, parts);
 
     fclose(mail);
+    free(to);
+    free(date);
+    free(boundary);
+    free(from);
     return 0;
 }

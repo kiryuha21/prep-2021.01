@@ -45,6 +45,7 @@ char* add_inf_check(char* main_info, char* add_info) {
                 ++i) {
         temp[i] = add_info[i - strlen(main_info)];
     }
+    free(add_info);
     return temp;
 }
 
