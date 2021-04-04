@@ -101,6 +101,7 @@ char* delete_fspaces(char* original) {
     for (size_t i = pos; i < strlen(original); ++i) {
         temp[i - pos] = original[i];
     }
+    //free(original);
     return temp;
 }
 
