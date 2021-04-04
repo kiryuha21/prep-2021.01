@@ -18,6 +18,7 @@ int main(int argc, const char **argv) {
 
     char* line = (char*)(malloc(sizeof(char)*2400000));
     if (line == NULL) {
+        fclose(mail);
         return ALLOC_ERR;
     }
 
@@ -84,6 +85,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
+                fclose(mail);
                 return ALLOC_ERR;
             }
             from_fl = true;
@@ -102,6 +104,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
+                fclose(mail);
                 return ALLOC_ERR;
             }
             to_fl = true;
@@ -120,6 +123,7 @@ int main(int argc, const char **argv) {
                 if (boundary != NULL) {
                     free(boundary);
                 }
+                fclose(mail);
                 return ALLOC_ERR;
             }
             date_fl = true;
@@ -130,7 +134,6 @@ int main(int argc, const char **argv) {
             if (strstr(temp_line, " boundary=") != NULL ||
                 strstr(temp_line, "\tboundary=") != NULL ||
                 strstr(temp_line, ";boundary=") != NULL) {
-
                 size_t index = find_last_index(temp_line, "boundary=");
                 char* temp_boundary = copy_from(line, index + 1);
                 char* to_shorten_line = delete_semicolon(remove_segue(temp_boundary, &amount));
@@ -146,6 +149,7 @@ int main(int argc, const char **argv) {
                     if (date != NULL) {
                         free(date);
                     }
+                    fclose(mail);
                     return ALLOC_ERR;
                 }
                 boundary_set = true;
