@@ -7,78 +7,121 @@ int main(int argc, const char **argv) {
 
     const char *path_to_eml = argv[1];
 
-    char* from, *to, *date, *boundary = (char*)(malloc(sizeof(char) * 1024));
+    char* from = (char*)(malloc(sizeof(char) * 2400000)),
+    *to = (char*)(malloc(sizeof(char) * 2400000)), 
+    *date = (char*)(malloc(sizeof(char) * 1024)), 
+    *boundary = (char*)(malloc(sizeof(char) * 1024));
 
-    int parts = 0;
-    int add_arr_size = 0;
+    int parts = 0, amount;
     FILE* mail = fopen(path_to_eml, "r");
+    if (mail == NULL) {
+        return OPEN_ERR;
+    }
 
-    char** additions_arr = (char**) malloc(sizeof(char*));
-    additions_arr[0] = (char*) malloc(sizeof(char)*1024);
+    char* line = (char*)(malloc(sizeof(char)*2400000));
 
-    char* line = (char*)(malloc(sizeof(char)*1024));
+    bool from_fl = false, to_fl = false, date_fl = false;
 
     // header processing
 
     while (!feof(mail)) {
-        fgets(line, 1024, mail);
-        if (strlen(line) == 1) {
+        fgets(line, 2400000, mail);
+        if (strcmp(line, "\r\n") == 0 || line[0] == '\n') {
             break;
         }
 
-        char* pointer;
-        if ((pointer = strstr(line, "From")) != NULL) {
-        from = remove_segue(pointer + 6);
+        if (from_fl) {
+            while (true) {
+                char* temp = add_inf_check(from, line);
+                if (temp == line) {
+                    break;
+                } else {
+                    from = temp;
+                    fgets(line, 2400000, mail);
+                }
+            }
+            from_fl = false;
         }
 
-        if ((pointer = strstr(line, "To")) != NULL) {
-            to = remove_segue(pointer + 4);
+        if (to_fl) {
+            while (true) {
+                char* temp = add_inf_check(to, line);
+                if (temp == line) {
+                    break;
+                } else {
+                    to = temp;
+                    fgets(line, 2400000, mail);
+                }
+            }
+            to_fl = false;
         }
 
-        if ((pointer = strstr(line, "Date")) != NULL) {
-            date = remove_segue(pointer + 6);
+        if (date_fl) {
+            while (true) {
+                char* temp = add_inf_check(date, line);
+                if (temp == line) {
+                    break;
+                } else {
+                    date = temp;
+                    fgets(line, 2400000, mail);
+                }
+            }
+            date_fl = false;
+        }
+
+        char *pointer;
+        if ((pointer = strstr(line, "From: ")) != NULL) {
+            from = remove_segue(pointer + 6, &amount);
+            from_fl = true;
+        }
+
+        if ((pointer = strstr(line, "To: ")) != NULL && line[0] == 'T') {
+            to = remove_segue(pointer + 4, &amount);
+            to_fl = true;
+        }
+
+        if ((pointer = strstr(line, "Date: ")) != NULL) {
+            date = remove_segue(pointer + 6, &amount);
+            date_fl = true;
         }
 
         if ((pointer = strstr(line, "boundary=")) != NULL) {
-            boundary = remove_quotes(remove_segue(pointer + 9));
-        }
-
-        if (line[0] == ' ') {
-            if (add_arr_size != 0) {
-                char** test_ptr = (char**) realloc(additions_arr, add_arr_size + sizeof(char*));
-                if (test_ptr == NULL) {
-                    return ALLOC_ERR;
-                } else {
-                additions_arr = test_ptr;
-                }
-                additions_arr[add_arr_size] = malloc(sizeof(char) * 1024);
-            }
-            additions_arr[add_arr_size] = remove_segue(line);
-            ++add_arr_size;
+            boundary = delete_spaces(remove_quotes(delete_semicolon(remove_segue(pointer + 9, &amount))));
         }
     }
 
     // body processing
 
     bool empty_lines = true;
+    bool r_symbols = false;
     while (!feof(mail)) {
-        fgets(line, 1024, mail);
+        fgets(line, 2400000, mail);
         if (strlen(line) > 1) {
             empty_lines = false;
         }
+        if (line[strlen(line) - 2] == '\r') {
+            r_symbols = true;
+        }
 
-        if (strstr(line, boundary) != NULL) {
+        if (strstr(line, boundary) != NULL &&
+            strcmp(boundary, "") != 0) {
+            if ((r_symbols && strlen(boundary) == strlen(line) - 4) ||
+            (!r_symbols && strlen(boundary) == strlen(line) - 3))
             ++parts;
         }
     }
     if (empty_lines) {
         parts = 0;
     } else {
-        parts -= 2;
+        if (!strcmp(boundary, "")) {
+            parts = 1;
+        }
     }
+    /* puts(from);
+    puts(to);
+    puts(date);
+    printf("%d\n", parts); */
     printf("%s|%s|%s|%d", from, to, date, parts);
-
-    free(additions_arr);
 
     fclose(mail);
     return 0;
