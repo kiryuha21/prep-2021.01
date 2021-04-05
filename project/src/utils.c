@@ -69,26 +69,24 @@ char* add_inf_check(char* main_info, char* add_info) {
     size_t main_len = strlen(main_info);
     size_t add_len = strlen(add_info);
 
-    add_info = remove_segue(add_info, &amount);
-    char* temp = (char*)malloc(sizeof(char) * (main_len + add_len + 1));
+    char* temp_add_info = remove_segue(add_info, &amount);
+    char* temp = (char*)malloc(sizeof(char) * (main_len + add_len - amount + 1));
 
     if (temp == NULL) {
         return NULL;
     }
 
-    for (size_t i = 0; i < main_len + add_len + 1; ++i) {
+    for (size_t i = 0; i < main_len + add_len - amount + 1; ++i) {
         temp[i] = '\0';
     }
 
     for (size_t i = 0; i < main_len; ++i) {
         temp[i] = main_info[i];
     }
-    for (size_t i = size + main_len;
-         i < main_len + add_len - amount + size + 2;
-         ++i) {
-        temp[i] = add_info[i - main_len];
+    for (size_t i = size + main_len; i < main_len + add_len - amount + 1; ++i) {
+        temp[i] = temp_add_info[i - main_len];
     }
-    free(add_info);
+    free(temp_add_info);
     free(main_info);
     main_info = temp;
     return main_info;
