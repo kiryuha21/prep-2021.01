@@ -1,7 +1,8 @@
 #include "utils.h"
 
-char* remove_quotes(char* original) {
+char* remove_quotes(char* original, int* mark) {
     if (original[0] != '"') {
+        *mark = 0;
         return original;
     }
     size_t orig_len = strlen(original);
@@ -18,6 +19,7 @@ char* remove_quotes(char* original) {
         temp[i - 1] = original[i];
     }
     original = temp;
+    *mark = 1;
     return original;
 }
 
@@ -39,7 +41,7 @@ char* remove_segue(char* original, int* amount) {
     for (size_t i = 0; i < orig_len - size + 1; ++i) {
         temp[i] = '\0';
     }
-    
+
     for (size_t i = 0; i < orig_len - size; ++i) {
         temp[i] = original[i];
     }
@@ -82,8 +84,9 @@ char* add_inf_check(char* main_info, char* add_info) {
     return temp;
 }
 
-char* delete_spaces(char* original) {
+char* delete_spaces(char* original, int* mark) {
     if (strchr(original, ' ') == NULL) {
+        *mark = 0;
         return original;
     }
     size_t orig_len = strlen(original);
@@ -103,11 +106,13 @@ char* delete_spaces(char* original) {
         }
     }
     original = temp;
+    *mark = 1;
     return original;
 }
 
-char* delete_semicolon(char* original) {
+char* delete_semicolon(char* original, int* mark) {
     if (strchr(original, ';') == NULL) {
+        *mark = 0;
         return original;
     }
     size_t orig_len = strlen(original);
@@ -125,11 +130,13 @@ char* delete_semicolon(char* original) {
         temp[i] = original[i];
     }
     original = temp;
+    *mark = 1;
     return original;
 }
 
-char* delete_fspaces(char* original) {
+char* delete_fspaces(char* original, int* mark) {
     if (original[0] != ' ') {
+        *mark = 0;
         return original;
     }
     size_t orig_len = strlen(original);
@@ -149,6 +156,7 @@ char* delete_fspaces(char* original) {
         temp[i - pos] = original[i];
     }
     original = temp;
+    *mark = 1;
     return original;
 }
 

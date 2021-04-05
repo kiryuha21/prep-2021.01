@@ -97,8 +97,9 @@ int main(int argc, const char **argv) {
 
         char *pointer;
         if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
+            int fspace_mark;
             char* temp_from = remove_segue(pointer + 5, &amount);
-            from = delete_fspaces(temp_from);  //написать в одну строку чтобы не ломалось
+            from = delete_fspaces(temp_from, &fspace_mark);
             if (from == NULL) {
                 fclose(mail);
                 free(to);
@@ -106,7 +107,7 @@ int main(int argc, const char **argv) {
                 free(date);
                 return ALLOC_ERR;
             }
-            if (temp_from != NULL) {
+            if (fspace_mark) {
                 free(temp_from);
             }
             from_fl = true;
@@ -142,9 +143,13 @@ int main(int argc, const char **argv) {
                 strstr(temp_line, "\tboundary=") != NULL ||
                 strstr(temp_line, ";boundary=") != NULL) {
                 size_t index = find_last_index(temp_line, "boundary=");
+
+                int semicolon_mark, space_mark, quotes_mark;
                 char* temp_boundary = copy_from(line, index + 1);
-                char* to_shorten_line = delete_semicolon(remove_segue(temp_boundary, &amount));
-                boundary = delete_spaces(remove_quotes(to_shorten_line));
+                char* first_temp_boundary = remove_segue(temp_boundary, &amount);
+                char* semicolon_temp = delete_semicolon(first_temp_boundary, &semicolon_mark);
+                char* second_temp_boundary = remove_quotes(semicolon_temp, &quotes_mark);
+                boundary = delete_spaces(second_temp_boundary, &space_mark);
                 if (boundary == NULL) {
                     fclose(mail);
                     free(to);
@@ -152,7 +157,22 @@ int main(int argc, const char **argv) {
                     free(date);
                     return ALLOC_ERR;
                 }
+                if (temp_boundary != NULL) {
+                    free(temp_boundary);
+                }
+                if (first_temp_boundary != NULL && semicolon_mark) {
+                    free(first_temp_boundary);
+                }
+                if (semicolon_temp != NULL && quotes_mark) {
+                    free(semicolon_temp);
+                }
+                if (second_temp_boundary != NULL && space_mark) {
+                    free(second_temp_boundary);
+                }
                 boundary_set = true;
+            }
+            if (temp_line != NULL) {
+                free(temp_line);
             }
         }
     }
@@ -206,7 +226,9 @@ int main(int argc, const char **argv) {
     free(to);
     free(date);
     free(line);
-    free(boundary);
     free(from);
+    if (boundary_set) {
+        free(boundary);
+    }
     return 0;
 }
