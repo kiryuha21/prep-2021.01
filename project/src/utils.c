@@ -89,7 +89,9 @@ char* add_inf_check(char* main_info, char* add_info) {
         temp[i] = add_info[i - main_len];
     }
     free(add_info);
-    return temp;
+    free(main_info);
+    main_info = temp;
+    return main_info;
 }
 
 char* delete_spaces(char* original, int* mark) {
