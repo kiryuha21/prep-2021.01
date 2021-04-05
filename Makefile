@@ -1,6 +1,4 @@
 TARGET = main.out
-CFLAGS = -ggdb3
-CC = gcc
 
 # XXX: Don't forget backslash at the end of any line except the last one
 HDRS = \

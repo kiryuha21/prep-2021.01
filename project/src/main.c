@@ -22,7 +22,8 @@ int main(int argc, const char **argv) {
         return ALLOC_ERR;
     }
 
-    bool from_fl = false, to_fl = false, date_fl = false, boundary_set = false;
+    bool from_fl = false, to_fl = false, date_fl = false;
+    bool boundary_set = false;
 
     // header processing
 
@@ -96,34 +97,34 @@ int main(int argc, const char **argv) {
         }
 
         char *pointer;
-        if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
-            int fspace_mark;
-            char* temp_from = remove_segue(pointer + 5, &amount);
-            from = delete_fspaces(temp_from, &fspace_mark);
-            if (from == NULL) {
-                fclose(mail);
-                free(to);
-                free(boundary);
-                free(date);
-                return ALLOC_ERR;
+            if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
+                int fspace_mark;
+                char* temp_from = remove_segue(pointer + 5, &amount);
+                from = delete_fspaces(temp_from, &fspace_mark);
+                if (from == NULL) {
+                    fclose(mail);
+                    free(to);
+                    free(boundary);
+                    free(date);
+                    return ALLOC_ERR;
+                }
+                if (fspace_mark) {
+                    free(temp_from);
+                }
+                from_fl = true;
             }
-            if (fspace_mark) {
-                free(temp_from);
-            }
-            from_fl = true;
-        }
 
-        if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
-            to = remove_segue(pointer + 4, &amount);
-            if (to == NULL) {
-                fclose(mail);
-                free(from);
-                free(boundary);
-                free(date);
-                return ALLOC_ERR;
+            if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
+                to = remove_segue(pointer + 4, &amount);
+                if (to == NULL) {
+                    fclose(mail);
+                    free(from);
+                    free(boundary);
+                    free(date);
+                    return ALLOC_ERR;
+                }
+                to_fl = true;
             }
-            to_fl = true;
-        }
 
         if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
             date = remove_segue(pointer + 6, &amount);
@@ -182,9 +183,7 @@ int main(int argc, const char **argv) {
     bool empty_lines = true;
     while (!feof(mail)) {
         fgets(line, 2400000, mail);
-
         size_t line_len = strlen(line);
-
         if (line_len > 1) {
             empty_lines = false;
             if (!boundary_set) {
@@ -225,10 +224,10 @@ int main(int argc, const char **argv) {
     fclose(mail);
     free(to);
     free(date);
-    free(line);
     free(from);
     if (boundary_set) {
         free(boundary);
     }
+    free(line);
     return 0;
 }
