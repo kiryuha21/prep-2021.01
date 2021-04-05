@@ -97,13 +97,17 @@ int main(int argc, const char **argv) {
 
         char *pointer;
         if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
-            from = delete_fspaces(remove_segue(pointer + 5, &amount));
+            char* temp_from = remove_segue(pointer + 5, &amount);
+            from = delete_fspaces(temp_from);  //написать в одну строку чтобы не ломалось
             if (from == NULL) {
                 fclose(mail);
                 free(to);
                 free(boundary);
                 free(date);
                 return ALLOC_ERR;
+            }
+            if (temp_from != NULL) {
+                free(temp_from);
             }
             from_fl = true;
         }
