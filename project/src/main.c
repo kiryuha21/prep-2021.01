@@ -12,13 +12,27 @@ int main(int argc, const char **argv) {
         return OPEN_ERR;
     }
 
-    char *from, *to, *boundary, *date;
+    char *from = (char*)malloc(sizeof(char) * 1024);
+    memset(from, '\0', 1024);
+
+    char *to = (char*)malloc(sizeof(char) * 1024);
+    memset(to, '\0', 1024);
+
+    char *boundary = (char*)malloc(sizeof(char) * 1024);
+    memset(boundary, '\0', 1024);
+
+    char* date = (char*)malloc(sizeof(char) * 1024);
+    memset(date, '\0', 1024);
 
     int parts = 0, amount;
 
     char* line = (char*)(malloc(sizeof(char)*2400000));
     if (line == NULL) {
         fclose(mail);
+        free(from);
+        free(to);
+        free(boundary);
+        free(date);
         return ALLOC_ERR;
     }
 
@@ -99,6 +113,7 @@ int main(int argc, const char **argv) {
         char *pointer;
             if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
                 int fspace_mark;
+                free(from);
                 char* temp_from = remove_segue(pointer + 5, &amount);
                 from = delete_fspaces(temp_from, &fspace_mark);
                 if (from == NULL) {
@@ -115,6 +130,7 @@ int main(int argc, const char **argv) {
             }
 
             if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
+                free(to);
                 to = remove_segue(pointer + 4, &amount);
                 if (to == NULL) {
                     fclose(mail);
@@ -127,6 +143,7 @@ int main(int argc, const char **argv) {
             }
 
         if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
+            free(date);
             date = remove_segue(pointer + 6, &amount);
             if (date == NULL) {
                 fclose(mail);
@@ -146,6 +163,7 @@ int main(int argc, const char **argv) {
                 size_t index = find_last_index(temp_line, "boundary=");
 
                 int semicolon_mark, space_mark, quotes_mark;
+                free(boundary);
                 char* temp_boundary = copy_from(line, index + 1);
                 char* first_temp_boundary = remove_segue(temp_boundary, &amount);
                 char* semicolon_temp = delete_semicolon(first_temp_boundary, &semicolon_mark);
@@ -207,16 +225,6 @@ int main(int argc, const char **argv) {
         if (!boundary_set) {
             parts = 1;
         }
-    }
-
-    if (to == NULL) {
-        to = (char*)malloc(sizeof(char));
-    }
-    if (date == NULL) {
-        date = (char*)malloc(sizeof(char));
-    }
-    if (from == NULL) {
-        from = (char*)malloc(sizeof(char));
     }
 
     printf("%s|%s|%s|%d", from, to, date, parts);

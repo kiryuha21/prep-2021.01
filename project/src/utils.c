@@ -1,6 +1,10 @@
 #include "utils.h"
 
 char* remove_quotes(char* original, int* mark) {
+    if (original == NULL) {
+        return NULL;
+    }
+
     if (original[0] != '"') {
         *mark = 0;
         return original;
@@ -25,6 +29,10 @@ char* remove_quotes(char* original, int* mark) {
 
 char* remove_segue(char* original, int* amount) {
     int size;
+    if (original == NULL) {
+        return NULL;
+    }
+
     size_t orig_len = strlen(original);
     if (original[orig_len - 2] == '\r') {
         size = 2;
@@ -85,10 +93,15 @@ char* add_inf_check(char* main_info, char* add_info) {
 }
 
 char* delete_spaces(char* original, int* mark) {
+    if (original == NULL) {
+        return NULL;
+    }
+
     if (strchr(original, ' ') == NULL) {
         *mark = 0;
         return original;
     }
+
     size_t orig_len = strlen(original);
     char* temp = (char*)malloc(sizeof(char) * orig_len);
 
@@ -111,10 +124,15 @@ char* delete_spaces(char* original, int* mark) {
 }
 
 char* delete_semicolon(char* original, int* mark) {
+    if (original == NULL) {
+        return NULL;
+    }
+
     if (strchr(original, ';') == NULL) {
         *mark = 0;
         return original;
     }
+
     size_t orig_len = strlen(original);
     char* temp = (char*)malloc(sizeof(char) * orig_len);
 
