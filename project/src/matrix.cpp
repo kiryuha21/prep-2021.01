@@ -39,8 +39,9 @@ namespace prep {
     std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
         for (size_t i = 0; i < matrix.rows; ++i) {
             for (size_t j = 0; j < matrix.cols; ++j) {
-                os << matrix(i, j);
+                os << matrix(i, j) << " ";
             }
+            os<<::std::endl;
         }
         return os;
     }
