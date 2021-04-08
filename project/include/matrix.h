@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
-#include <istream>
+#include <iostream>
+#include <iomanip>
+
 
 namespace prep {
 class Matrix {

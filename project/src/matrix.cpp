@@ -10,13 +10,51 @@ namespace prep {
     }
 
     Matrix::Matrix(std::istream& is) {
-        is >> this->rows >> this->cols;
-        this->matrix_content.resize(this->rows);
-        for (size_t i = 0; i < this->rows; ++i) {
-            this->matrix_content[i].resize(this->cols);
-            for (size_t j = 0; j < this->cols; ++j) {
-                is >> this->matrix_content[i][j];
+        try {
+            if (!is) {
+                throw InvalidMatrixStream();
             }
+            if (!(is >> this->rows >> this->cols).good()) {
+                throw InvalidMatrixStream();
+            }
+            this->matrix_content.resize(this->rows);
+            for (size_t i = 0; i < this->rows; ++i) {
+                this->matrix_content[i].resize(this->cols);
+                for (size_t j = 0; j < this->cols; ++j) {
+                    if (!(is >> this->matrix_content[i][j]).good()) {
+                        throw InvalidMatrixStream();
+                    }
+                }
+            }
+        }
+        catch (const InvalidMatrixStream &ex) {
+            std::cout << ex.what();
+            throw InvalidMatrixStream();
+        }
+    }
+
+    std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
+        try {
+            if (!os) {
+                throw InvalidMatrixStream();
+            }
+            for (size_t i = 0; i < matrix.rows; ++i) {
+                for (size_t j = 0; j < matrix.cols; ++j) {
+                    if (os.bad()) {
+                        throw InvalidMatrixStream();
+                    }
+                    auto pres = std::numeric_limits<double>::max_digits10;
+                    if (!(os << std::setprecision(pres) << matrix(i, j) << " ").good()) {
+                        throw InvalidMatrixStream();
+                    }
+                }
+                os<<::std::endl;
+            }
+                return os;
+        }
+        catch (const InvalidMatrixStream &ex) {
+            std::cout << ex.what();
+            throw InvalidMatrixStream();
         }
     }
 
@@ -29,21 +67,31 @@ namespace prep {
     }
 
     double Matrix::operator()(size_t i, size_t j) const {
-        return this->matrix_content[i][j];
+        Matrix temp_matrix(*this);
+        try {
+            if (i > this->rows || j > this->cols) {
+                throw OutOfRange(i, j, temp_matrix);
+            }
+            return this->matrix_content[i][j];
+        }
+        catch (const OutOfRange &ex) {
+            std::cout << ex.what();
+            throw OutOfRange(i, j, temp_matrix);
+        }
     }
 
     double& Matrix::operator()(size_t i, size_t j) {
-        return this->matrix_content[i][j];
-    }
-
-    std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
-        for (size_t i = 0; i < matrix.rows; ++i) {
-            for (size_t j = 0; j < matrix.cols; ++j) {
-                os << matrix(i, j) << " ";
+        Matrix temp_matrix(*this);
+        try {
+            if (i > this->rows || j > this->cols) {
+                throw OutOfRange(i, j, temp_matrix);
             }
-            os<<::std::endl;
+            return this->matrix_content[i][j];
         }
-        return os;
+        catch (const OutOfRange &ex) {
+            std::cout << ex.what();
+            throw OutOfRange(i, j, temp_matrix);
+        }
     }
 
     bool Matrix::operator==(const Matrix &rhs) const {
@@ -52,7 +100,7 @@ namespace prep {
         }
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < this->cols; ++j) {
-                if (this->matrix_content[i][j] != rhs.matrix_content[i][j]) {
+                if (std::abs(this->matrix_content[i][j] - rhs.matrix_content[i][j]) < 1e-07) {
                     return false;
                 }
             }
