@@ -1,10 +1,10 @@
-Start testing: Apr 10 16:19 MSK
+Start testing: Apr 10 19:42 MSK
 ----------------------------------------------------------
 2/2 Testing: ExtraTest
 2/2 Test: ExtraTest
 Command: "/home/kiryuha21/prep-2021.01/project/tests/tests" "/home/kiryuha21/prep-2021.01/project/tests/data" "--gtest_filter=*Extra*"
 Directory: /home/kiryuha21/prep-2021.01/project/tests
-"ExtraTest" start time: Apr 10 16:19 MSK
+"ExtraTest" start time: Apr 10 19:42 MSK
 Output:
 ----------------------------------------------------------
 Note: Google Test filter = *Extra*
@@ -13,14 +13,14 @@ Note: Google Test filter = *Extra*
 [----------] 3 tests from MatrixMathExtraSuite
 [ RUN      ] MatrixMathExtraSuite.Det
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_det/case_0"
-[       OK ] MatrixMathExtraSuite.Det (1256 ms)
+[       OK ] MatrixMathExtraSuite.Det (1331 ms)
 [ RUN      ] MatrixMathExtraSuite.Adj
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_adj/case_0"
-[       OK ] MatrixMathExtraSuite.Adj (10380 ms)
+[       OK ] MatrixMathExtraSuite.Adj (11584 ms)
 [ RUN      ] MatrixMathExtraSuite.Inv
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_inv/case_0"
-[       OK ] MatrixMathExtraSuite.Inv (8182 ms)
-[----------] 3 tests from MatrixMathExtraSuite (19818 ms total)
+[       OK ] MatrixMathExtraSuite.Inv (8649 ms)
+[----------] 3 tests from MatrixMathExtraSuite (21564 ms total)
 
 [----------] 5 tests from MatrixMathExtraNegSuite
 [ RUN      ] MatrixMathExtraNegSuite.Det
@@ -38,14 +38,14 @@ Note: Google Test filter = *Extra*
 [----------] 5 tests from MatrixMathExtraNegSuite (1 ms total)
 
 [----------] Global test environment tear-down
-[==========] 8 tests from 2 test suites ran. (19819 ms total)
+[==========] 8 tests from 2 test suites ran. (21565 ms total)
 [  PASSED  ] 8 tests.
 <end of output>
-Test time =  19.82 sec
+Test time =  21.57 sec
 ----------------------------------------------------------
 Test Passed.
-"ExtraTest" end time: Apr 10 16:20 MSK
-"ExtraTest" time elapsed: 00:00:19
+"ExtraTest" end time: Apr 10 19:42 MSK
+"ExtraTest" time elapsed: 00:00:21
 ----------------------------------------------------------
 
-End testing: Apr 10 16:20 MSK
+End testing: Apr 10 19:42 MSK

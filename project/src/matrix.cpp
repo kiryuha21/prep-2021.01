@@ -195,10 +195,6 @@ namespace prep {
     }
 
     double recursive_det(Matrix& origin_matrix) {
-        if (origin_matrix.rows != origin_matrix.cols) {
-            throw DimensionMismatch(origin_matrix);
-        }
-
         double temp_det = 0;
         if (origin_matrix.rows == 1) {
             temp_det = origin_matrix(0, 0);
@@ -222,14 +218,10 @@ namespace prep {
 
     double Matrix::det() const {
         Matrix matrix_for_exception(*this);
-        double temp_det;
-        try {
-            temp_det = recursive_det(matrix_for_exception);
-        }
-        catch (DimensionMismatch&) {
+        if (this->rows != this->cols) {
             throw DimensionMismatch(matrix_for_exception);
         }
-        return temp_det;
+        return recursive_det(matrix_for_exception);
     }
 
     Matrix Matrix::adj() const {
