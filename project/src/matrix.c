@@ -316,8 +316,12 @@ Matrix* adj(const Matrix* matrix) {
 }
 
 Matrix* inv(const Matrix* matrix) {
+    if (matrix == NULL) {
+        return NULL;
+    }
+
     temp_det = recursive_det(matrix->matrix_content, matrix->rows);
-    if (matrix == NULL || temp_det == 0) {
+    if (temp_det == 0) {
         return NULL;
     }
 
