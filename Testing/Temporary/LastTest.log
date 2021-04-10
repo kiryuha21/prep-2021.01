@@ -1,10 +1,10 @@
-Start testing: Apr 10 11:57 MSK
+Start testing: Apr 10 14:06 MSK
 ----------------------------------------------------------
 2/2 Testing: ExtraTest
 2/2 Test: ExtraTest
 Command: "/home/kiryuha21/prep-2021.01/project/tests/tests" "/home/kiryuha21/prep-2021.01/project/tests/data" "--gtest_filter=*Extra*"
 Directory: /home/kiryuha21/prep-2021.01/project/tests
-"ExtraTest" start time: Apr 10 11:57 MSK
+"ExtraTest" start time: Apr 10 14:06 MSK
 Output:
 ----------------------------------------------------------
 Note: Google Test filter = *Extra*
@@ -13,70 +13,39 @@ Note: Google Test filter = *Extra*
 [----------] 3 tests from MatrixMathExtraSuite
 [ RUN      ] MatrixMathExtraSuite.Det
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_det/case_0"
-/home/kiryuha21/prep-2021.01/project/tests/src/tests_math_extra.cpp:19: Failure
-The difference between expected_det and m_det is 0.0479652, which exceeds 1e-07, where
-expected_det evaluates to 0.0479652,
-m_det evaluates to 0, and
-1e-07 evaluates to 9.9999999999999995e-08.
-[  FAILED  ] MatrixMathExtraSuite.Det (4453 ms)
+[       OK ] MatrixMathExtraSuite.Det (29881 ms)
 [ RUN      ] MatrixMathExtraSuite.Adj
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_adj/case_0"
-/home/kiryuha21/prep-2021.01/project/tests/src/tests_math_extra.cpp:37: Failure
-Expected equality of these values:
-  expected_adj
-    Which is: 10 10
-0.099660100000000001 -0.12775839999999999 0.069243399999999997 0.14802080000000001 -0.033879800000000002 0.11298859999999999 -0.045846900000000003 -0.024557499999999999 -0.0126477 -0.058404900000000003 
--0.0129383 0.073440199999999997 -0.11349239999999999 -0.042941899999999998 0.0076249999999999998 -0.1187035 0.0403262 0.090414499999999995 -0.062075600000000002 0.13180230000000001 
-0.059603400000000001 -0.1258899 0.11092589999999999 0.075289099999999998 0.034965700000000002 0.1221942 -0.2326425 -0.13119639999999999 0.1237664 0.023515299999999999 
-0.097104599999999999 -0.011757500000000001 0.089643500000000001 0.070937600000000003 0.083849999999999994 -0.0083940000000000004 -0.119349 -0.187725 0.0076559000000000002 0.0377054 
-0.1329272 -0.16260230000000001 0.065499699999999994 0.082762600000000006 0.055522299999999997 0.0130492 -0.1075284 -0.038808799999999997 0.059017600000000003 0.0019193999999999999 
-0.023455699999999999 0.039162500000000003 0.041366 -0.0034175999999999998 -0.080319199999999993 0.040246700000000003 0.021595300000000001 0.069289100000000006 -0.0052592000000000003 -0.10952770000000001 
--0.23870050000000001 0.15047369999999999 -0.047312399999999998 -0.1960393 -0.063762799999999994 -0.085595099999999993 0.2129723 0.1862606 -0.096095399999999997 0.049866800000000003 
-0.25118259999999998 -0.017628399999999999 -0.093676999999999996 0.068652500000000005 0.19517519999999999 0.035038300000000001 -0.070836999999999997 -0.1236421 -0.1139425 0.033164699999999998 
--0.138961 0.071247599999999994 -0.0296411 0.0035593999999999999 -0.028078100000000002 0.004777 0.0988647 0.043531100000000003 0.056231099999999999 -0.103934 
--0.2205358 0.15044389999999999 -0.085421200000000003 -0.1999389 -0.1788169 -0.091875100000000001 0.25886730000000002 0.13837759999999999 0.0451844 0.047102400000000003 
-
-  m_adj
-    Which is: 10 10
-0 -0 0 -0 0 -0 0 -0 0 -0 
--0 0 -0 0 -0 0 -0 0 -0 0 
-0 -0 0 -0 0 -0 0 -0 0 -0 
--0 0 -0 0 -0 0 -0 0 -0 0 
-0 -0 0 -0 0 -0 0 -0 0 -0 
--0 0 -0 0 -0 0 -0 0 -0 0 
-0 -0 0 -0 0 -0 0 -0 0 -0 
--0 0 -0 0 -0 0 -0 0 -0 0 
-0 -0 0 -0 0 -0 0 -0 0 -0 
--0 0 -0 0 -0 0 -0 0 -0 0 
-
-[  FAILED  ] MatrixMathExtraSuite.Adj (45066 ms)
+[       OK ] MatrixMathExtraSuite.Adj (258164 ms)
 [ RUN      ] MatrixMathExtraSuite.Inv
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_inv/case_0"
-[       OK ] MatrixMathExtraSuite.Inv (49350 ms)
-[----------] 3 tests from MatrixMathExtraSuite (98869 ms total)
+[       OK ] MatrixMathExtraSuite.Inv (316838 ms)
+[----------] 3 tests from MatrixMathExtraSuite (604883 ms total)
 
 [----------] 5 tests from MatrixMathExtraNegSuite
 [ RUN      ] MatrixMathExtraNegSuite.Det
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_extra_neg/singular.txt"
-[       OK ] MatrixMathExtraNegSuite.Det (5 ms)
+[       OK ] MatrixMathExtraNegSuite.Det (0 ms)
 [ RUN      ] MatrixMathExtraNegSuite.Inv
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_extra_neg/singular.txt"
-/home/kiryuha21/prep-2021.01/project/tests/src/tests_math_extra_neg.cpp:24: Failure
-Expected: m.inv() throws an exception of type prep::SingularMatrix.
-  Actual: it throws nothing.
-[  FAILED  ] MatrixMathExtraNegSuite.Inv (0 ms)
+[       OK ] MatrixMathExtraNegSuite.Inv (0 ms)
 [ RUN      ] MatrixMathExtraNegSuite.DetDimension
-/home/kiryuha21/prep-2021.01/project/tests/src/tests_math_extra_neg.cpp:30: Failure
-Expected: m.det() throws an exception of type prep::DimensionMismatch.
-  Actual: it throws nothing.
-[  FAILED  ] MatrixMathExtraNegSuite.DetDimension (8 ms)
+[       OK ] MatrixMathExtraNegSuite.DetDimension (1 ms)
 [ RUN      ] MatrixMathExtraNegSuite.AdjDimension
+[       OK ] MatrixMathExtraNegSuite.AdjDimension (0 ms)
+[ RUN      ] MatrixMathExtraNegSuite.InvDimension
+[       OK ] MatrixMathExtraNegSuite.InvDimension (0 ms)
+[----------] 5 tests from MatrixMathExtraNegSuite (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 2 test suites ran. (604884 ms total)
+[  PASSED  ] 8 tests.
 <end of output>
-Test time =  99.08 sec
+Test time = 604.89 sec
 ----------------------------------------------------------
-Test Failed.
-"ExtraTest" end time: Apr 10 11:59 MSK
-"ExtraTest" time elapsed: 00:01:39
+Test Passed.
+"ExtraTest" end time: Apr 10 14:16 MSK
+"ExtraTest" time elapsed: 00:10:04
 ----------------------------------------------------------
 
-End testing: Apr 10 11:59 MSK
+End testing: Apr 10 14:16 MSK

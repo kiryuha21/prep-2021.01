@@ -214,69 +214,85 @@ namespace prep {
         return temp;
     }
 
-    void minus_row_col(std::vector<std::vector<double>> origin_matrix, std::vector<std::vector<double>> temp_matrix, size_t row, size_t col) {
-        size_t miss_row = 0;
+	void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, size_t row, size_t col) {
+		size_t miss_row = 0;
 
-        for (size_t i = 0; i < origin_matrix.size() - 1; ++i) {
-            if (i == row) {
-                miss_row = 1;
-            }
-            size_t miss_col = 0;
-            for (size_t j = 0; j < origin_matrix.size() - 1; ++j) {
-                if (j == col) {
-                    miss_col = 1;
-                }
-                temp_matrix[i][j] = origin_matrix[i + miss_row][j + miss_col];
-            }
-        }
-    }
+		for (size_t i = 0; i < origin_matrix.rows - 1; ++i) {
+			if (i == row) {
+				miss_row = 1;
+			}
+			size_t miss_col = 0;
+			for (size_t j = 0; j < origin_matrix.rows - 1; ++j) {
+				if (j == col) {
+					miss_col = 1;
+				}
+				temp_matrix(i,j) = origin_matrix(i + miss_row, j + miss_col);
+			}
+		}
+	}
 
-    double recursive_det(std::vector<std::vector<double>> origin_matrix) { //Исключения!!
-        double temp_det = 0;
+	double recursive_det(Matrix& origin_matrix) {
+		try
+		{
+			if (origin_matrix.rows != origin_matrix.cols) {
+				throw (DimensionMismatch(origin_matrix));
+			}
+		}
+		catch (DimensionMismatch& ex)
+		{
+			throw (DimensionMismatch(origin_matrix));
+		}
 
-        if (origin_matrix.size() == 1) {
-            temp_det = origin_matrix[0][0];
-            return(temp_det);
-        }
+		double temp_det = 0;
+		if (origin_matrix.rows == 1) {
+			temp_det = origin_matrix(0,0);
+			return temp_det;
+		}
 
-        if (origin_matrix.size() == 2) {
-            temp_det = origin_matrix[0][0] * origin_matrix[1][1] - (origin_matrix[1][0] * origin_matrix[0][1]);
-            return(temp_det);
-        }
+		if (origin_matrix.rows == 2) {
+			temp_det = origin_matrix(0,0) * origin_matrix(1,1) - (origin_matrix(1,0) * origin_matrix(0,1));
+			return temp_det;
+		}
 
-        std::vector<std::vector<double>> temp_matrix;
-        temp_matrix.resize(origin_matrix.size() - 1);
-        for (size_t i = 0; i < origin_matrix.size() - 1; ++i) {
-            temp_matrix[i].resize(origin_matrix.size() -1);
-        }
+		int sign = 1;
+		Matrix temp_matrix(origin_matrix.rows - 1, origin_matrix.cols - 1);
+		for (size_t i = 0; i < origin_matrix.rows; ++i) {
+			minus_row_col(origin_matrix, temp_matrix, i, 0);
+			temp_det = temp_det + sign * origin_matrix(i,0) * recursive_det(temp_matrix);
+			sign = -sign;
+		}
+		return temp_det;
+	}
 
-        int sign = 1;
-        for (size_t i = 0; i < origin_matrix.size(); ++i) {
-            minus_row_col(origin_matrix, temp_matrix, i, 0);
-            temp_det = temp_det + sign * origin_matrix[i][0] * recursive_det(temp_matrix);
-            sign = -sign;
-        }
-        return temp_det;
-    }
-
-    double Matrix::det() const {
-        return recursive_det(this->matrix_content);
-    }
+	double Matrix::det() const {
+		Matrix matrix_for_exception(*this);
+		double temp_det;
+		try
+		{
+			temp_det = recursive_det(matrix_for_exception);
+		}
+		catch (DimensionMismatch& ex)
+		{
+			throw (DimensionMismatch(matrix_for_exception));
+		}
+		return temp_det;
+	}
 
     Matrix Matrix::adj() const {
         Matrix temp_matrix(this->rows, this->cols);
+        Matrix main_matrix(*this);
         int sign = 1;
 
         for (size_t i = 0; i < temp_matrix.rows; ++i) {
             for (size_t j = 0; j < temp_matrix.cols; ++j) {
                 Matrix additions_matrix(temp_matrix.rows - 1, temp_matrix.cols - 1);
-                minus_row_col(this->matrix_content, additions_matrix.matrix_content, j, i);
+                minus_row_col(main_matrix, additions_matrix, j, i);
                 if ((i + j) % 2 == 0) {
                     sign = 1;
                 } else {
                     sign = -1;
                 }
-                temp_matrix.matrix_content[i][j] = sign * recursive_det(additions_matrix.matrix_content);
+                temp_matrix(i,j) = sign * recursive_det(additions_matrix);
             }
         }
         return temp_matrix;
@@ -284,14 +300,19 @@ namespace prep {
 
 
     Matrix Matrix::inv() const{
+    	if (this->det() == 0) {
+            throw SingularMatrix();
+        }
+
         if (this->cols == 1) {
             Matrix temp_matrix(1, 1);
-            temp_matrix.matrix_content[0][0] = 1 / this->matrix_content[0][0];
+            temp_matrix(0, 0) = 1 / this->matrix_content[0][0];
             return temp_matrix;
         }
 
         Matrix adj_temp = adj();
-        Matrix temp_matrix = adj_temp * (1 / recursive_det(this->matrix_content));
+        Matrix det_temp(*this);
+        Matrix temp_matrix = adj_temp * (1 / recursive_det(det_temp));
         return temp_matrix;
     }
 

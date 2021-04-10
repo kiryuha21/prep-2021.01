@@ -32,10 +32,10 @@ public:
 
     Matrix operator*(double val) const;
 
-    friend
-    Matrix operator*(double val, const Matrix& matrix);
-    friend
-    std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
+    friend Matrix operator*(double val, const Matrix& matrix);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
+    friend void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, size_t row, size_t col);
+    friend double recursive_det(Matrix& origin_matrix);
 
     Matrix transp() const;
     double det() const;
@@ -46,4 +46,6 @@ public:
 Matrix operator*(double val, const Matrix& matrix);
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 bool is_empty(std::istream& matrix_file);
+double recursive_det(Matrix& origin_matrix);
+void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, size_t row, size_t col);
 }  // namespace prep
