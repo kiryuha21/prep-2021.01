@@ -9,6 +9,11 @@ namespace prep {
         }
     }
 
+    bool is_empty(std::istream& matrix_file)
+    {
+        return matrix_file.peek() == std::istream::traits_type::eof();
+    }
+
     Matrix::Matrix(std::istream& is) {
         try {
             if (!is) {
@@ -21,14 +26,19 @@ namespace prep {
             for (size_t i = 0; i < this->rows; ++i) {
                 this->matrix_content[i].resize(this->cols);
                 for (size_t j = 0; j < this->cols; ++j) {
-                    if (!(is >> this->matrix_content[i][j]).good()) {
+                	std::string cell;
+                    if (is_empty(is)) {
                         throw InvalidMatrixStream();
                     }
+                    is >> cell;
+                    this->matrix_content[i][j] = std::stod(cell);
                 }
             }
         }
+        catch (std::invalid_argument&) {
+            throw InvalidMatrixStream();
+        }
         catch (const InvalidMatrixStream &ex) {
-            std::cout << ex.what();
             throw InvalidMatrixStream();
         }
     }
@@ -36,6 +46,9 @@ namespace prep {
     std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
         try {
             if (!os) {
+                throw InvalidMatrixStream();
+            }
+            if (!(os << matrix.rows << " " << matrix.cols << std::endl).good()) {
                 throw InvalidMatrixStream();
             }
             for (size_t i = 0; i < matrix.rows; ++i) {
@@ -69,29 +82,29 @@ namespace prep {
     double Matrix::operator()(size_t i, size_t j) const {
         Matrix temp_matrix(*this);
         try {
-            if (i > this->rows || j > this->cols) {
+            if (i >= this->rows || j >= this->cols) {
                 throw OutOfRange(i, j, temp_matrix);
             }
-            return this->matrix_content[i][j];
+            
         }
         catch (const OutOfRange &ex) {
-            std::cout << ex.what();
             throw OutOfRange(i, j, temp_matrix);
         }
+        return this->matrix_content[i][j];
     }
 
     double& Matrix::operator()(size_t i, size_t j) {
         Matrix temp_matrix(*this);
         try {
-            if (i > this->rows || j > this->cols) {
+            if (i >= this->rows || j >= this->cols) {
                 throw OutOfRange(i, j, temp_matrix);
             }
-            return this->matrix_content[i][j];
         }
         catch (const OutOfRange &ex) {
-            std::cout << ex.what();
             throw OutOfRange(i, j, temp_matrix);
         }
+        return this->matrix_content[i][j];
+
     }
 
     bool Matrix::operator==(const Matrix &rhs) const {
@@ -100,7 +113,7 @@ namespace prep {
         }
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < this->cols; ++j) {
-                if (std::abs(this->matrix_content[i][j] - rhs.matrix_content[i][j]) < 1e-07) {
+                if (std::abs(this->matrix_content[i][j] - rhs.matrix_content[i][j]) > 1e-07) {
                     return false;
                 }
             }
@@ -113,35 +126,62 @@ namespace prep {
     }
 
     Matrix Matrix::operator+(const Matrix &rhs) const {
-        Matrix temp(this->rows, this->cols);
-        for (size_t i = 0; i < this->getCols(); ++i) {
-            for (size_t j = 0; j < this->getRows(); ++j) {
-                temp.matrix_content[i][j] = this->matrix_content[i][j] + rhs.matrix_content[i][j];
+        Matrix temp_matrix(*this);
+        try {
+            if (this->rows != rhs.rows || this->cols != rhs.cols) {
+                throw DimensionMismatch(temp_matrix, rhs);
             }
         }
-        return temp;
+        catch (DimensionMismatch &ex) {
+            throw DimensionMismatch(temp_matrix, rhs);
+        }
+        Matrix rezult_matrix(this->rows, this->cols);
+        for (size_t i = 0; i < this->rows; ++i) {
+            for (size_t j = 0; j < this->cols; ++j) {
+                rezult_matrix.matrix_content[i][j] = this->matrix_content[i][j] + rhs.matrix_content[i][j];
+            }
+        }
+        return rezult_matrix;
     }
     
     Matrix Matrix::operator-(const Matrix &rhs) const {
-        Matrix temp(this->rows, this->cols);
-        for (size_t i = 0; i < this->getCols(); ++i) {
-            for (size_t j = 0; j < this->getRows(); ++j) {
-                temp.matrix_content[i][j] = this->matrix_content[i][j] - rhs.matrix_content[i][j];
+        Matrix temp_matrix(*this);
+        try {
+            if (this->rows != rhs.rows || this->cols != rhs.cols) {
+                throw DimensionMismatch(temp_matrix, rhs);
             }
         }
-        return temp;
+        catch (DimensionMismatch &ex) {
+            throw DimensionMismatch(temp_matrix, rhs);
+        }
+        Matrix rezult_matrix(this->rows, this->cols);
+        for (size_t i = 0; i < this->rows; ++i) {
+            for (size_t j = 0; j < this->cols; ++j) {
+                rezult_matrix.matrix_content[i][j] = this->matrix_content[i][j] - rhs.matrix_content[i][j];
+            }
+        }
+        return rezult_matrix;
     }
 
     Matrix Matrix::operator*(const Matrix &rhs) const {
-        Matrix temp(this->rows, rhs.cols);
-        for (size_t i = 0; i < this->rows; ++i) {
-            for (size_t j = 0; j < rhs.cols; ++j) {
-                temp.matrix_content[i][j]= 0;
-                for (size_t k = 0; k < this->cols; ++k)
-                    temp.matrix_content[i][j] += this->matrix_content[i][k] * rhs.matrix_content[k][j];
+        Matrix temp_matrix(*this);
+        try {
+            if (this->cols != rhs.rows) {
+                throw DimensionMismatch(temp_matrix, rhs);
             }
         }
-        return temp;
+        catch (DimensionMismatch &ex) {
+            throw DimensionMismatch(temp_matrix, rhs);
+        }
+        Matrix rezult_matrix(this->rows, rhs.cols);
+        for (size_t i = 0; i < this->rows; ++i) {
+            for (size_t j = 0; j < rhs.cols; ++j) {
+                rezult_matrix.matrix_content[i][j]= 0;
+                for (size_t k = 0; k < this->cols; ++k)
+                    rezult_matrix.matrix_content[i][j] += this->matrix_content[i][k] * rhs.matrix_content[k][j];
+            }
+        }
+        return rezult_matrix;
     }
 
     Matrix Matrix::operator*(double val) const {

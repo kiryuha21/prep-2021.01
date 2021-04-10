@@ -45,4 +45,5 @@ public:
 
 Matrix operator*(double val, const Matrix& matrix);
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
+bool is_empty(std::istream& matrix_file);
 }  // namespace prep
