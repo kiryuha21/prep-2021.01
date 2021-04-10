@@ -235,6 +235,9 @@ namespace prep {
     Matrix Matrix::adj() const {
         Matrix temp_matrix(this->rows, this->cols);
         Matrix main_matrix(*this);
+        if (main_matrix.cols != main_matrix.rows) {
+            throw DimensionMismatch(main_matrix);
+        }
         int sign = 1;
 
         for (size_t i = 0; i < temp_matrix.rows; ++i) {
@@ -254,7 +257,8 @@ namespace prep {
 
 
     Matrix Matrix::inv() const {
-        if (this->det() == 0) {
+        double temp_det = this->det();
+        if (temp_det == 0) {
             throw SingularMatrix();
         }
 
@@ -265,8 +269,7 @@ namespace prep {
         }
 
         Matrix adj_temp = adj();
-        Matrix det_temp(*this);
-        Matrix temp_matrix = adj_temp * (1 / recursive_det(det_temp));
+        Matrix temp_matrix = adj_temp * (1 / temp_det);
         return temp_matrix;
     }
 
