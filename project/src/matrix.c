@@ -320,7 +320,7 @@ Matrix* inv(const Matrix* matrix) {
         return NULL;
     }
 
-    temp_det = recursive_det(matrix->matrix_content, matrix->rows);
+    double temp_det = recursive_det(matrix->matrix_content, matrix->rows);
     if (temp_det == 0) {
         return NULL;
     }
