@@ -7,10 +7,11 @@
 
 namespace prep {
 class Matrix {
-private:
+ private:
     std::vector<std::vector<double>> matrix_content;
     size_t cols, rows;
-public:
+
+ public:
     explicit Matrix(size_t rows = 0, size_t cols = 0);
     explicit Matrix(std::istream& is);
     Matrix(const Matrix& rhs) = default;
