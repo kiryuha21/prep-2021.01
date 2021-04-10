@@ -1,10 +1,10 @@
-Start testing: Apr 10 14:06 MSK
+Start testing: Apr 10 14:40 MSK
 ----------------------------------------------------------
 2/2 Testing: ExtraTest
 2/2 Test: ExtraTest
 Command: "/home/kiryuha21/prep-2021.01/project/tests/tests" "/home/kiryuha21/prep-2021.01/project/tests/data" "--gtest_filter=*Extra*"
 Directory: /home/kiryuha21/prep-2021.01/project/tests
-"ExtraTest" start time: Apr 10 14:06 MSK
+"ExtraTest" start time: Apr 10 14:40 MSK
 Output:
 ----------------------------------------------------------
 Note: Google Test filter = *Extra*
@@ -13,14 +13,14 @@ Note: Google Test filter = *Extra*
 [----------] 3 tests from MatrixMathExtraSuite
 [ RUN      ] MatrixMathExtraSuite.Det
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_det/case_0"
-[       OK ] MatrixMathExtraSuite.Det (29881 ms)
+[       OK ] MatrixMathExtraSuite.Det (724 ms)
 [ RUN      ] MatrixMathExtraSuite.Adj
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_adj/case_0"
-[       OK ] MatrixMathExtraSuite.Adj (258164 ms)
+[       OK ] MatrixMathExtraSuite.Adj (7253 ms)
 [ RUN      ] MatrixMathExtraSuite.Inv
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_inv/case_0"
-[       OK ] MatrixMathExtraSuite.Inv (316838 ms)
-[----------] 3 tests from MatrixMathExtraSuite (604883 ms total)
+[       OK ] MatrixMathExtraSuite.Inv (8896 ms)
+[----------] 3 tests from MatrixMathExtraSuite (16873 ms total)
 
 [----------] 5 tests from MatrixMathExtraNegSuite
 [ RUN      ] MatrixMathExtraNegSuite.Det
@@ -30,22 +30,22 @@ Note: Google Test filter = *Extra*
 "/home/kiryuha21/prep-2021.01/project/tests/data/matrix_extra_neg/singular.txt"
 [       OK ] MatrixMathExtraNegSuite.Inv (0 ms)
 [ RUN      ] MatrixMathExtraNegSuite.DetDimension
-[       OK ] MatrixMathExtraNegSuite.DetDimension (1 ms)
+[       OK ] MatrixMathExtraNegSuite.DetDimension (0 ms)
 [ RUN      ] MatrixMathExtraNegSuite.AdjDimension
 [       OK ] MatrixMathExtraNegSuite.AdjDimension (0 ms)
 [ RUN      ] MatrixMathExtraNegSuite.InvDimension
 [       OK ] MatrixMathExtraNegSuite.InvDimension (0 ms)
-[----------] 5 tests from MatrixMathExtraNegSuite (1 ms total)
+[----------] 5 tests from MatrixMathExtraNegSuite (0 ms total)
 
 [----------] Global test environment tear-down
-[==========] 8 tests from 2 test suites ran. (604884 ms total)
+[==========] 8 tests from 2 test suites ran. (16873 ms total)
 [  PASSED  ] 8 tests.
 <end of output>
-Test time = 604.89 sec
+Test time =  16.88 sec
 ----------------------------------------------------------
 Test Passed.
-"ExtraTest" end time: Apr 10 14:16 MSK
-"ExtraTest" time elapsed: 00:10:04
+"ExtraTest" end time: Apr 10 14:40 MSK
+"ExtraTest" time elapsed: 00:00:16
 ----------------------------------------------------------
 
-End testing: Apr 10 14:16 MSK
+End testing: Apr 10 14:40 MSK

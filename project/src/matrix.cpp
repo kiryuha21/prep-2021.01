@@ -15,60 +15,51 @@ namespace prep {
     }
 
     Matrix::Matrix(std::istream& is) {
-        try {
-            if (!is) {
-                throw InvalidMatrixStream();
-            }
-            if (!(is >> this->rows >> this->cols).good()) {
-                throw InvalidMatrixStream();
-            }
-            this->matrix_content.resize(this->rows);
-            for (size_t i = 0; i < this->rows; ++i) {
-                this->matrix_content[i].resize(this->cols);
-                for (size_t j = 0; j < this->cols; ++j) {
-                	std::string cell;
-                    if (is_empty(is)) {
-                        throw InvalidMatrixStream();
-                    }
-                    is >> cell;
+        if (!is) {
+            throw InvalidMatrixStream();
+        }
+        if (!(is >> this->rows >> this->cols).good()) {
+            throw InvalidMatrixStream();
+        }
+        this->matrix_content.resize(this->rows);
+        for (size_t i = 0; i < this->rows; ++i) {
+            this->matrix_content[i].resize(this->cols);
+            for (size_t j = 0; j < this->cols; ++j) {
+                std::string cell;
+                if (is_empty(is)) {
+                    throw InvalidMatrixStream();
+                }
+                is >> cell;
+                try {
                     this->matrix_content[i][j] = std::stod(cell);
                 }
+                catch (std::invalid_argument&) {
+                    throw InvalidMatrixStream();
+                }
             }
-        }
-        catch (std::invalid_argument&) {
-            throw InvalidMatrixStream();
-        }
-        catch (const InvalidMatrixStream &ex) {
-            throw InvalidMatrixStream();
         }
     }
 
     std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
-        try {
-            if (!os) {
-                throw InvalidMatrixStream();
-            }
-            if (!(os << matrix.rows << " " << matrix.cols << std::endl).good()) {
-                throw InvalidMatrixStream();
-            }
-            for (size_t i = 0; i < matrix.rows; ++i) {
-                for (size_t j = 0; j < matrix.cols; ++j) {
-                    if (os.bad()) {
-                        throw InvalidMatrixStream();
-                    }
-                    auto pres = std::numeric_limits<double>::max_digits10;
-                    if (!(os << std::setprecision(pres) << matrix(i, j) << " ").good()) {
-                        throw InvalidMatrixStream();
-                    }
-                }
-                os<<::std::endl;
-            }
-                return os;
-        }
-        catch (const InvalidMatrixStream &ex) {
-            std::cout << ex.what();
+        if (!os) {
             throw InvalidMatrixStream();
         }
+        if (!(os << matrix.rows << " " << matrix.cols << std::endl).good()) {
+            throw InvalidMatrixStream();
+        }
+        for (size_t i = 0; i < matrix.rows; ++i) {
+            for (size_t j = 0; j < matrix.cols; ++j) {
+                if (os.bad()) {
+                    throw InvalidMatrixStream();
+                }
+                auto pres = std::numeric_limits<double>::max_digits10;
+                if (!(os << std::setprecision(pres) << matrix(i, j) << " ").good()) {
+                    throw InvalidMatrixStream();
+                }
+            }
+            os<<::std::endl;
+        }
+        return os;
     }
 
     size_t Matrix::getRows() const {
@@ -80,31 +71,19 @@ namespace prep {
     }
 
     double Matrix::operator()(size_t i, size_t j) const {
-        Matrix temp_matrix(*this);
-        try {
-            if (i >= this->rows || j >= this->cols) {
-                throw OutOfRange(i, j, temp_matrix);
-            }
-            
-        }
-        catch (const OutOfRange &ex) {
+        if (i >= this->rows || j >= this->cols) {
+            Matrix temp_matrix(*this);
             throw OutOfRange(i, j, temp_matrix);
         }
         return this->matrix_content[i][j];
     }
 
     double& Matrix::operator()(size_t i, size_t j) {
-        Matrix temp_matrix(*this);
-        try {
-            if (i >= this->rows || j >= this->cols) {
-                throw OutOfRange(i, j, temp_matrix);
-            }
-        }
-        catch (const OutOfRange &ex) {
+        if (i >= this->rows || j >= this->cols) {
+            Matrix temp_matrix(*this);
             throw OutOfRange(i, j, temp_matrix);
         }
         return this->matrix_content[i][j];
-
     }
 
     bool Matrix::operator==(const Matrix &rhs) const {
@@ -126,13 +105,8 @@ namespace prep {
     }
 
     Matrix Matrix::operator+(const Matrix &rhs) const {
-        Matrix temp_matrix(*this);
-        try {
-            if (this->rows != rhs.rows || this->cols != rhs.cols) {
-                throw DimensionMismatch(temp_matrix, rhs);
-            }
-        }
-        catch (DimensionMismatch &ex) {
+        if (this->rows != rhs.rows || this->cols != rhs.cols) {
+            Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
         Matrix rezult_matrix(this->rows, this->cols);
@@ -145,13 +119,8 @@ namespace prep {
     }
     
     Matrix Matrix::operator-(const Matrix &rhs) const {
-        Matrix temp_matrix(*this);
-        try {
-            if (this->rows != rhs.rows || this->cols != rhs.cols) {
-                throw DimensionMismatch(temp_matrix, rhs);
-            }
-        }
-        catch (DimensionMismatch &ex) {
+        if (this->rows != rhs.rows || this->cols != rhs.cols) {
+            Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
         Matrix rezult_matrix(this->rows, this->cols);
@@ -164,13 +133,8 @@ namespace prep {
     }
 
     Matrix Matrix::operator*(const Matrix &rhs) const {
-        Matrix temp_matrix(*this);
-        try {
-            if (this->cols != rhs.rows) {
-                throw DimensionMismatch(temp_matrix, rhs);
-            }
-        }
-        catch (DimensionMismatch &ex) {
+        if (this->cols != rhs.rows) {
+            Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
         Matrix rezult_matrix(this->rows, rhs.cols);
@@ -232,16 +196,9 @@ namespace prep {
 	}
 
 	double recursive_det(Matrix& origin_matrix) {
-		try
-		{
-			if (origin_matrix.rows != origin_matrix.cols) {
-				throw (DimensionMismatch(origin_matrix));
-			}
-		}
-		catch (DimensionMismatch& ex)
-		{
-			throw (DimensionMismatch(origin_matrix));
-		}
+		if (origin_matrix.rows != origin_matrix.cols) {
+            throw DimensionMismatch(origin_matrix);
+        }
 
 		double temp_det = 0;
 		if (origin_matrix.rows == 1) {
@@ -271,7 +228,7 @@ namespace prep {
 		{
 			temp_det = recursive_det(matrix_for_exception);
 		}
-		catch (DimensionMismatch& ex)
+		catch (DimensionMismatch&)
 		{
 			throw (DimensionMismatch(matrix_for_exception));
 		}
