@@ -316,7 +316,8 @@ Matrix* adj(const Matrix* matrix) {
 }
 
 Matrix* inv(const Matrix* matrix) {
-    if (matrix == NULL) {
+    temp_det = recursive_det(matrix->matrix_content, matrix->rows);
+    if (matrix == NULL || temp_det == 0) {
         return NULL;
     }
 
@@ -327,7 +328,7 @@ Matrix* inv(const Matrix* matrix) {
     }
 
     Matrix* adj_temp = adj(matrix);
-    Matrix* temp_matrix = mul_scalar(adj_temp, (1 / recursive_det(matrix->matrix_content, matrix->rows)));
+    Matrix* temp_matrix = mul_scalar(adj_temp, (1 / temp_det));
     free_matrix(adj_temp);
     return temp_matrix;
 }
