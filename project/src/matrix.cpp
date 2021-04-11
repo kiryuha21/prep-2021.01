@@ -2,12 +2,11 @@
 #include "exceptions.h"
 
 namespace prep {
-    Matrix::Matrix(size_t rows, size_t cols): cols(cols), rows(rows) {
-        this->matrix_content.resize(rows);
-        for (size_t i = 0; i < rows; ++i) {
-            this->matrix_content[i].resize(cols);
-        }
-    }
+    Matrix::Matrix(size_t rows, size_t cols) :
+    cols(cols),
+    rows(rows),
+    matrix_content(std::vector<std::vector<double>>(rows, std::vector<double>(cols)))
+    { }
 
     bool is_empty(std::istream& matrix_file) {
         return matrix_file.peek() == std::istream::traits_type::eof();

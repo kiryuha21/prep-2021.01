@@ -8,8 +8,8 @@
 namespace prep {
 class Matrix {
  private:
-    std::vector<std::vector<double>> matrix_content;
     size_t cols, rows;
+    std::vector<std::vector<double>> matrix_content;
 
  public:
     explicit Matrix(size_t rows = 0, size_t cols = 0);
