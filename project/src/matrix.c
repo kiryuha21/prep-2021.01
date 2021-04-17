@@ -272,7 +272,7 @@ int det(const Matrix* matrix, double* val) {
 }
 
 Matrix* adj(const Matrix* matrix) {
-    if (matrix == NULL) {
+    if (matrix == NULL || matrix->rows != matrix->cols) {
         return NULL;
     }
 
@@ -305,7 +305,7 @@ Matrix* adj(const Matrix* matrix) {
 }
 
 Matrix* inv(const Matrix* matrix) {
-    if (matrix == NULL) {
+    if (matrix == NULL || matrix->rows != matrix->cols) {
         return NULL;
     }
 
