@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <float.h>
+#include <math.h>
 
 #define CREATE_ERR (-1)
 #define GET_ERR    (-2)

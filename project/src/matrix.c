@@ -310,7 +310,7 @@ Matrix* inv(const Matrix* matrix) {
     }
 
     double temp_det = recursive_det(matrix);
-    if (temp_det == 0) {
+    if (fabs(temp_det) < DBL_EPSILON) {
         return NULL;
     }
 
