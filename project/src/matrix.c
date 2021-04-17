@@ -80,19 +80,16 @@ int get_cols(const Matrix* matrix, size_t* cols) {
     return GET_ERR;
 }
 
-int free_matrix_content(double** matrix, size_t rows) {
-    for (size_t i = 0; i < rows; ++i) {
-        free(matrix[i]);
-    }
-
-    free(matrix);
-    return 0;
-}
-
 int free_matrix(Matrix* matrix) {
-    if (free_matrix_content(matrix->matrix_content, matrix->rows) != 0) {
-        return FREE_ERR;
+	if (matrix == NULL) {
+		return FREE_ERR;
+	}
+
+    for (size_t i = 0; i < matrix->rows; ++i) {
+    	free(matrix->matrix_content[i]);
     }
+
+    free(matrix->matrix_content);
 
     free(matrix);
     return 0;
@@ -195,85 +192,67 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
     return temp_matrix;
 }
 
-int minus_row_col(double **origin_matrix, double **temp_matrix, size_t row, size_t col, size_t m_size) {
-    if (origin_matrix == NULL) {
-        free_matrix_content(temp_matrix, m_size - 1);
-        return DET_ERR;
-    }
-
-    if (temp_matrix == NULL) {
-        free_matrix_content(origin_matrix, m_size);
-        return DET_ERR;
-    }
-
+int minus_row_col(const Matrix *origin_matrix, Matrix *temp_matrix, size_t row, size_t col) {
     size_t miss_row = 0;
 
-    for (size_t i = 0; i < m_size - 1; ++i) {
+    for (size_t i = 0; i < origin_matrix->rows - 1; ++i) {
         if (i == row) {
             miss_row = 1;
         }
         size_t miss_col = 0;
-        for (size_t j = 0; j < m_size - 1; ++j) {
+        for (size_t j = 0; j < origin_matrix->rows - 1; ++j) {
             if (j == col) {
                 miss_col = 1;
             }
-            temp_matrix[i][j] = origin_matrix[i + miss_row][j + miss_col];
+            temp_matrix->matrix_content[i][j] = origin_matrix->matrix_content[i + miss_row][j + miss_col];
         }
     }
     return 0;
 }
 
-double recursive_det(double **origin_matrix, size_t m_size) {
+double recursive_det(const Matrix *origin_matrix) {
     double temp_det = 0;
 
-    if (m_size < 1) {
+    if (origin_matrix->rows < 1) {
         return 0;
     }
 
-    if (m_size == 1) {
-        temp_det = origin_matrix[0][0];
+    if (origin_matrix->rows == 1) {
+        temp_det = origin_matrix->matrix_content[0][0];
         return(temp_det);
     }
 
-    if (m_size == 2) {
-        temp_det = origin_matrix[0][0] * origin_matrix[1][1] - (origin_matrix[1][0] * origin_matrix[0][1]);
+    if (origin_matrix->rows == 2) {
+        temp_det = origin_matrix->matrix_content[0][0] * origin_matrix->matrix_content[1][1] -
+        origin_matrix->matrix_content[1][0] * origin_matrix->matrix_content[0][1];
         return(temp_det);
     }
 
-    double** temp_matrix = (double**)malloc(sizeof(double*)*m_size);
+    Matrix* temp_matrix = create_matrix(origin_matrix->rows - 1, origin_matrix->cols - 1);
     if (temp_matrix == NULL) {
         return 0;
     }
 
-    for (size_t i = 0; i < m_size; ++i) {
-        temp_matrix[i] = (double*)malloc(sizeof(double) * m_size);
-        if (temp_matrix[i] == NULL) {
-            free(temp_matrix);
-            return 0;
-        }
-    }
-
     int sign = 1;
-    for (size_t i = 0; i < m_size; ++i) {
-        if (minus_row_col(origin_matrix, temp_matrix, i, 0, m_size) != 0) {
+
+    for (size_t i = 0; i < origin_matrix->rows; ++i) {
+        if (minus_row_col(origin_matrix, temp_matrix, i, 0) != 0) {
             return 0;
         }
-        temp_det = temp_det + sign * origin_matrix[i][0] * recursive_det(temp_matrix, m_size - 1);
+        temp_det = temp_det + sign * origin_matrix->matrix_content[i][0] *
+        recursive_det(temp_matrix);
         sign = -sign;
     }
 
-    for (size_t i = 0; i < m_size; ++i) {
-        free(temp_matrix[i]);
-    }
-    free(temp_matrix);
+    free_matrix(temp_matrix);
     return(temp_det);
 }
 
 int det(const Matrix* matrix, double* val) {
-    if (matrix == NULL && val != NULL) {
+    if (matrix == NULL) {
         return DET_ERR;
     }
-    *val = recursive_det(matrix->matrix_content, matrix->rows);
+    *val = recursive_det(matrix);
     return 0;
 }
 
@@ -288,8 +267,7 @@ Matrix* adj(const Matrix* matrix) {
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
         for (size_t j = 0; j < temp_matrix->cols; ++j) {
             Matrix* additions_matrix = create_matrix(temp_matrix->rows - 1, temp_matrix->cols - 1);
-            if (minus_row_col(matrix->matrix_content, additions_matrix->matrix_content,
-                              j, i, temp_matrix->rows) != 0) {
+            if (minus_row_col(matrix, additions_matrix, j, i) != 0) {
                 return NULL;
             }
             if ((i + j) % 2 == 0) {
@@ -297,8 +275,7 @@ Matrix* adj(const Matrix* matrix) {
             } else {
                 sign = -1;
             }
-            temp_matrix->matrix_content[i][j] = sign * recursive_det(additions_matrix->matrix_content,
-                                                                     additions_matrix->rows);
+            temp_matrix->matrix_content[i][j] = sign * recursive_det(additions_matrix);
             free_matrix(additions_matrix);
         }
     }
@@ -310,19 +287,30 @@ Matrix* inv(const Matrix* matrix) {
         return NULL;
     }
 
-    double temp_det = recursive_det(matrix->matrix_content, matrix->rows);
+    double temp_det = recursive_det(matrix);
     if (temp_det == 0) {
         return NULL;
     }
 
     if (matrix->cols == 1) {
         Matrix* temp_matrix = create_matrix(1, 1);
+        if (temp_matrix == NULL) {
+        	return NULL;
+        }
         temp_matrix->matrix_content[0][0] = 1 / matrix->matrix_content[0][0];
         return temp_matrix;
     }
 
     Matrix* adj_temp = adj(matrix);
+    if (adj_temp == NULL) {
+    	return NULL;
+    }
+
     Matrix* temp_matrix = mul_scalar(adj_temp, (1 / temp_det));
+    if (temp_matrix == NULL) {
+    	return NULL;
+    }
+    
     free_matrix(adj_temp);
     return temp_matrix;
 }
