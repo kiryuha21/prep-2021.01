@@ -17,6 +17,9 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     for (size_t i = 0; i < rows; ++i) {
         temp_matrix->matrix_content[i] = (double*)malloc(cols * sizeof(double));
         if (temp_matrix->matrix_content[i] == NULL) {
+        	for (size_t j = 0; j < i; ++j) {
+        		free(temp_matrix->matrix_content[j]);
+        	}
             free(temp_matrix->matrix_content);
             free(temp_matrix);
             return NULL;
@@ -31,38 +34,24 @@ Matrix* create_matrix_from_file(const char* path_file) {
         return NULL;
     }
 
-    Matrix* temp_matrix = (Matrix*)malloc(sizeof(struct Matrix));
+    size_t rows, cols;
+
+    if (fscanf(matrix_file, "%zu %zu", &rows, &cols) != 2) {
+        fclose(matrix_file);
+        return NULL;
+    }
+
+    Matrix* temp_matrix = create_matrix(rows, cols);
     if (temp_matrix == NULL) {
-        fclose(matrix_file);
-        return NULL;
-    }
-
-    if (fscanf(matrix_file, "%zu %zu", &temp_matrix->rows, &temp_matrix->cols) != 2) {
-        fclose(matrix_file);
-        free(temp_matrix);
-        return NULL;
-    }
-
-    temp_matrix->matrix_content = (double**)malloc(temp_matrix->rows * sizeof(double));
-    if (temp_matrix->matrix_content == NULL) {
-        fclose(matrix_file);
-        free(temp_matrix);
-        return NULL;
+    	fclose(matrix_file);
+    	return NULL;
     }
 
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
-        temp_matrix->matrix_content[i] = (double*)malloc(temp_matrix->cols * sizeof(double));
-        if (temp_matrix->matrix_content[i] == NULL) {
-            fclose(matrix_file);
-            free(temp_matrix->matrix_content);
-            free(temp_matrix);
-            return NULL;
-        }
         for (size_t j = 0; j < temp_matrix->cols; ++j) {
             if (fscanf(matrix_file, "%lf", &temp_matrix->matrix_content[i][j]) != 1) {
-                free(temp_matrix->matrix_content);
-                free(temp_matrix);
                 fclose(matrix_file);
+                free_matrix(temp_matrix);
                 return NULL;
             }
         }
@@ -71,6 +60,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
     if (fclose(matrix_file) != 0) {
         return NULL;
     }
+
     return temp_matrix;
 }
 
