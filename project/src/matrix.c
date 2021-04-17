@@ -17,9 +17,9 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     for (size_t i = 0; i < rows; ++i) {
         temp_matrix->matrix_content[i] = (double*)malloc(cols * sizeof(double));
         if (temp_matrix->matrix_content[i] == NULL) {
-        	for (size_t j = 0; j < i; ++j) {
-        		free(temp_matrix->matrix_content[j]);
-        	}
+            for (size_t j = 0; j < i; ++j) {
+                free(temp_matrix->matrix_content[j]);
+            }
             free(temp_matrix->matrix_content);
             free(temp_matrix);
             return NULL;
@@ -43,8 +43,8 @@ Matrix* create_matrix_from_file(const char* path_file) {
 
     Matrix* temp_matrix = create_matrix(rows, cols);
     if (temp_matrix == NULL) {
-    	fclose(matrix_file);
-    	return NULL;
+        fclose(matrix_file);
+        return NULL;
     }
 
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
@@ -81,12 +81,12 @@ int get_cols(const Matrix* matrix, size_t* cols) {
 }
 
 int free_matrix(Matrix* matrix) {
-	if (matrix == NULL) {
-		return FREE_ERR;
-	}
+    if (matrix == NULL) {
+        return FREE_ERR;
+    }
 
     for (size_t i = 0; i < matrix->rows; ++i) {
-    	free(matrix->matrix_content[i]);
+        free(matrix->matrix_content[i]);
     }
 
     free(matrix->matrix_content);
@@ -117,6 +117,9 @@ Matrix* mul_scalar(const Matrix* matrix, double val) {
     }
 
     Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
 
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
         for (size_t j = 0; j < temp_matrix->cols; ++j) {
@@ -132,6 +135,9 @@ Matrix* transp(const Matrix* matrix) {
     }
 
     Matrix* temp_matrix = create_matrix(matrix->cols, matrix->rows);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
 
     for (size_t i = 0; i < matrix->cols; ++i) {
         for (size_t j = 0; j < matrix->rows; ++j) {
@@ -147,6 +153,9 @@ Matrix* sum(const Matrix* l, const Matrix* r) {
     }
 
     Matrix* temp_matrix = create_matrix(l->rows, l->cols);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
 
     for (size_t i = 0; i < l->rows; ++i) {
         for (size_t j = 0; j < l->cols; ++j) {
@@ -162,6 +171,9 @@ Matrix* sub(const Matrix* l, const Matrix* r) {
     }
 
     Matrix* temp_matrix = create_matrix(l->rows, l->cols);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
 
     for (size_t i = 0; i < l->rows; ++i) {
         for (size_t j = 0; j < l->cols; ++j) {
@@ -181,6 +193,9 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
     }
 
     Matrix* temp_matrix = create_matrix(l->rows, r->cols);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
 
     for (size_t i = 0; i < l->rows; ++i) {
         for (size_t j = 0; j < r->cols; ++j) {
@@ -249,7 +264,7 @@ double recursive_det(const Matrix *origin_matrix) {
 }
 
 int det(const Matrix* matrix, double* val) {
-    if (matrix == NULL) {
+    if (matrix == NULL || matrix->rows != matrix->cols) {
         return DET_ERR;
     }
     *val = recursive_det(matrix);
@@ -262,11 +277,18 @@ Matrix* adj(const Matrix* matrix) {
     }
 
     Matrix* temp_matrix = create_matrix(matrix->rows, matrix->cols);
+    if (temp_matrix == NULL) {
+        return NULL;
+    }
     int sign = 1;
 
     for (size_t i = 0; i < temp_matrix->rows; ++i) {
         for (size_t j = 0; j < temp_matrix->cols; ++j) {
             Matrix* additions_matrix = create_matrix(temp_matrix->rows - 1, temp_matrix->cols - 1);
+            if (additions_matrix == NULL) {
+                free_matrix(temp_matrix);
+                return NULL;
+            }
             if (minus_row_col(matrix, additions_matrix, j, i) != 0) {
                 return NULL;
             }
@@ -295,7 +317,7 @@ Matrix* inv(const Matrix* matrix) {
     if (matrix->cols == 1) {
         Matrix* temp_matrix = create_matrix(1, 1);
         if (temp_matrix == NULL) {
-        	return NULL;
+            return NULL;
         }
         temp_matrix->matrix_content[0][0] = 1 / matrix->matrix_content[0][0];
         return temp_matrix;
@@ -303,14 +325,15 @@ Matrix* inv(const Matrix* matrix) {
 
     Matrix* adj_temp = adj(matrix);
     if (adj_temp == NULL) {
-    	return NULL;
+        return NULL;
     }
 
     Matrix* temp_matrix = mul_scalar(adj_temp, (1 / temp_det));
     if (temp_matrix == NULL) {
-    	return NULL;
+        free_matrix(adj_temp);
+        return NULL;
     }
-    
+
     free_matrix(adj_temp);
     return temp_matrix;
 }
