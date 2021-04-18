@@ -108,7 +108,7 @@ int main(int argc, const char **argv) {
 
         // searching for "From" header
 
-        char *pointer;
+        char* pointer;
         if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
             int fspace_mark;
             free(from);
