@@ -264,7 +264,7 @@ double recursive_det(const Matrix *origin_matrix) {
 }
 
 int det(const Matrix* matrix, double* val) {
-    if (matrix == NULL || matrix->rows != matrix->cols) {
+    if (matrix == NULL || matrix->rows != matrix->cols || val == NULL) {
         return DET_ERR;
     }
     *val = recursive_det(matrix);
