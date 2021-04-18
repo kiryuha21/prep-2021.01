@@ -226,3 +226,22 @@ char* copy_from(char* original, size_t index) {
     original = temp;
     return original;
 }
+
+int free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* mail) {
+    if (from != NULL) {
+        free(from);
+    }
+    if (to != NULL) {
+        free(to);
+    }
+    if (date != NULL) {
+        free(date);
+    }
+    if (boundary != NULL) {
+        free(boundary);
+    }
+    if (mail != NULL) {
+        fclose(mail);
+    }
+    return 0;
+}

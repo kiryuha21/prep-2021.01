@@ -5,21 +5,21 @@ int main(int argc, const char **argv) {
         return -1;
     }
 
-    const char *path_to_eml = argv[1];
+    const char* path_to_eml = argv[1];
 
     FILE* mail = fopen(path_to_eml, "r");
     if (mail == NULL) {
         return OPEN_ERR;
     }
 
-    char *from = (char*)malloc(sizeof(char) * 1024);
+    char* from = (char*)malloc(sizeof(char) * 1024);
     if (from == NULL) {
         fclose(mail);
         return ALLOC_ERR;
     }
     memset(from, '\0', 1024);
 
-    char *to = (char*)malloc(sizeof(char) * 1024);
+    char* to = (char*)malloc(sizeof(char) * 1024);
     if (to == NULL) {
         free(from);
         fclose(mail);
@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
     }
     memset(to, '\0', 1024);
 
-    char *boundary = (char*)malloc(sizeof(char) * 1024);
+    char* boundary = (char*)malloc(sizeof(char) * 1024);
     if (boundary == NULL) {
         free(from);
         free(to);
@@ -50,11 +50,7 @@ int main(int argc, const char **argv) {
 
     char* line = (char*)(malloc(sizeof(char)*2400000));
     if (line == NULL) {
-        fclose(mail);
-        free(from);
-        free(to);
-        free(boundary);
-        free(date);
+        free_main_pointers(from, to, date, boundary, mail);
         return ALLOC_ERR;
     }
 
@@ -75,11 +71,8 @@ int main(int argc, const char **argv) {
             while (true) {
                 char* temp = add_inf_check(from, line);
                 if (temp == NULL) {
-                    fclose(mail);
-                    free(to);
-                    free(from);
-                    free(boundary);
-                    free(date);
+                    free_main_pointers(from, to, date, boundary, mail);
+                    free(line);
                     return ALLOC_ERR;
                 }
                 if (temp == line) {
@@ -98,11 +91,8 @@ int main(int argc, const char **argv) {
             while (true) {
                 char* temp = add_inf_check(to, line);
                 if (temp == NULL) {
-                    fclose(mail);
-                    free(to);
-                    free(from);
-                    free(boundary);
-                    free(date);
+                    free_main_pointers(from, to, date, boundary, mail);
+                    free(line);
                     return ALLOC_ERR;
                 }
                 if (temp == line) {
@@ -121,11 +111,8 @@ int main(int argc, const char **argv) {
             while (true) {
                 char* temp = add_inf_check(date, line);
                 if (temp == NULL) {
-                    fclose(mail);
-                    free(to);
-                    free(from);
-                    free(boundary);
-                    free(date);
+                    free_main_pointers(from, to, date, boundary, mail);
+                    free(line);
                     return ALLOC_ERR;
                 }
                 if (temp == line) {
@@ -147,10 +134,8 @@ int main(int argc, const char **argv) {
             char* temp_from = remove_segue(pointer + 5, &amount);
             from = delete_fspaces(temp_from, &fspace_mark);
             if (from == NULL) {
-                fclose(mail);
-                free(to);
-                free(boundary);
-                free(date);
+                free_main_pointers(from, to, date, boundary, mail);
+                free(line);
                 return ALLOC_ERR;
             }
             if (fspace_mark) {
@@ -165,10 +150,8 @@ int main(int argc, const char **argv) {
             free(to);
             to = remove_segue(pointer + 4, &amount);
             if (to == NULL) {
-                fclose(mail);
-                free(from);
-                free(boundary);
-                free(date);
+                free_main_pointers(from, to, date, boundary, mail);
+                free(line);
                 return ALLOC_ERR;
             }
             to_fl = true;
@@ -180,10 +163,8 @@ int main(int argc, const char **argv) {
             free(date);
             date = remove_segue(pointer + 6, &amount);
             if (date == NULL) {
-                fclose(mail);
-                free(to);
-                free(boundary);
-                free(from);
+                free_main_pointers(from, to, date, boundary, mail);
+                free(line);
                 return ALLOC_ERR;
             }
             date_fl = true;
@@ -206,10 +187,8 @@ int main(int argc, const char **argv) {
                 char* second_temp_boundary = remove_quotes(semicolon_temp, &quotes_mark);
                 boundary = delete_spaces(second_temp_boundary, &space_mark);
                 if (boundary == NULL) {
-                    fclose(mail);
-                    free(to);
-                    free(from);
-                    free(date);
+                    free_main_pointers(from, to, date, boundary, mail);
+                    free(line);
                     return ALLOC_ERR;
                 }
                 if (temp_boundary != NULL) {
@@ -267,11 +246,7 @@ int main(int argc, const char **argv) {
 
     printf("%s|%s|%s|%d", from, to, date, parts);
 
-    fclose(mail);
-    free(to);
-    free(date);
-    free(from);
-    free(boundary);
+    free_main_pointers(from, to, date, boundary, mail);
     free(line);
     return 0;
 }

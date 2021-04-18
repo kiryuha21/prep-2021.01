@@ -19,5 +19,6 @@ char* delete_semicolon(char* original, int* mark);
 char* tolower_w(char* original);
 size_t find_last_index(char* original, char* to_find);
 char* copy_from(char* original, size_t index);
+int free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* mail);
 
 #endif  // PROJECT_INCLUDE_UTILS_H_
