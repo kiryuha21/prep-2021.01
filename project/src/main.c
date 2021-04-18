@@ -13,37 +13,18 @@ int main(int argc, const char **argv) {
     }
 
     char* from = (char*)malloc(sizeof(char) * 1024);
-    if (from == NULL) {
-        fclose(mail);
-        return ALLOC_ERR;
-    }
-    memset(from, '\0', 1024);
-
     char* to = (char*)malloc(sizeof(char) * 1024);
-    if (to == NULL) {
-        free(from);
-        fclose(mail);
-        return ALLOC_ERR;
-    }
-    memset(to, '\0', 1024);
-
     char* boundary = (char*)malloc(sizeof(char) * 1024);
-    if (boundary == NULL) {
-        free(from);
-        free(to);
-        fclose(mail);
-        return ALLOC_ERR;
-    }
-    memset(boundary, '\0', 1024);
-
     char* date = (char*)malloc(sizeof(char) * 1024);
-    if (date == NULL) {
-        free(from);
-        free(to);
-        free(boundary);
-        fclose(mail);
+
+    if (from == NULL || to == NULL || boundary == NULL || date == NULL) {
+    	free_main_pointers(from, to, date, boundary, mail);
         return ALLOC_ERR;
     }
+
+    memset(from, '\0', 1024);
+    memset(to, '\0', 1024);
+    memset(boundary, '\0', 1024);
     memset(date, '\0', 1024);
 
     int parts = 0, amount;
