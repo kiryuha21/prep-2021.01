@@ -12,7 +12,7 @@ class Matrix {
     std::vector<std::vector<double>> matrix_content;
     static bool is_empty(std::istream& matrix_file);
     static double recursive_det(const Matrix& origin_matrix);
-    static void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, const size_t row, const size_t col);
+    static void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, size_t row, size_t col);
 
  public:
     explicit Matrix(size_t rows = 0, size_t cols = 0);
@@ -24,8 +24,8 @@ class Matrix {
     size_t getRows() const;
     size_t getCols() const;
 
-    double operator()(const size_t i, const size_t j) const;
-    double& operator()(const size_t i, const size_t j);
+    double operator()(size_t i, size_t j) const;
+    double& operator()(size_t i, size_t j);
 
     bool operator==(const Matrix& rhs) const;
     bool operator!=(const Matrix& rhs) const;
@@ -34,9 +34,9 @@ class Matrix {
     Matrix operator-(const Matrix& rhs) const;
     Matrix operator*(const Matrix& rhs) const;
 
-    Matrix operator*(const double val) const;
+    Matrix operator*(double val) const;
 
-    friend Matrix operator*(const double val, const Matrix& matrix);
+    friend Matrix operator*(double val, const Matrix& matrix);
     friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 
     Matrix transp() const;
@@ -45,6 +45,6 @@ class Matrix {
     Matrix inv() const;
 };
 
-Matrix operator*(const double val, const Matrix& matrix);
+Matrix operator*(double val, const Matrix& matrix);
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 }  // namespace prep
