@@ -5,10 +5,9 @@ namespace prep {
     Matrix::Matrix(size_t rows, size_t cols) :
     cols(cols),
     rows(rows),
-    matrix_content(std::vector<std::vector<double>>(rows, std::vector<double>(cols)))
-    { }
+    matrix_content(std::vector<std::vector<double>>(rows, std::vector<double>(cols))) { }
 
-    bool is_empty(std::istream& matrix_file) {
+    bool Matrix::is_empty(std::istream& matrix_file) {
         return matrix_file.peek() == std::istream::traits_type::eof();
     }
 
@@ -68,7 +67,7 @@ namespace prep {
         return this->cols;
     }
 
-    double Matrix::operator()(size_t i, size_t j) const {
+    double Matrix::operator()(const size_t i, const size_t j) const {
         if (i >= this->rows || j >= this->cols) {
             Matrix temp_matrix(*this);
             throw OutOfRange(i, j, temp_matrix);
@@ -76,7 +75,7 @@ namespace prep {
         return this->matrix_content[i][j];
     }
 
-    double& Matrix::operator()(size_t i, size_t j) {
+    double& Matrix::operator()(const size_t i, const size_t j) {
         if (i >= this->rows || j >= this->cols) {
             Matrix temp_matrix(*this);
             throw OutOfRange(i, j, temp_matrix);
@@ -107,13 +106,13 @@ namespace prep {
             Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
-        Matrix rezult_matrix(this->rows, this->cols);
+        Matrix result_matrix(this->rows, this->cols);
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < this->cols; ++j) {
-                rezult_matrix.matrix_content[i][j] = this->matrix_content[i][j] + rhs.matrix_content[i][j];
+                result_matrix.matrix_content[i][j] = this->matrix_content[i][j] + rhs.matrix_content[i][j];
             }
         }
-        return rezult_matrix;
+        return result_matrix;
     }
 
     Matrix Matrix::operator-(const Matrix &rhs) const {
@@ -121,13 +120,13 @@ namespace prep {
             Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
-        Matrix rezult_matrix(this->rows, this->cols);
+        Matrix result_matrix(this->rows, this->cols);
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < this->cols; ++j) {
-                rezult_matrix.matrix_content[i][j] = this->matrix_content[i][j] - rhs.matrix_content[i][j];
+                result_matrix.matrix_content[i][j] = this->matrix_content[i][j] - rhs.matrix_content[i][j];
             }
         }
-        return rezult_matrix;
+        return result_matrix;
     }
 
     Matrix Matrix::operator*(const Matrix &rhs) const {
@@ -135,18 +134,19 @@ namespace prep {
             Matrix temp_matrix(*this);
             throw DimensionMismatch(temp_matrix, rhs);
         }
-        Matrix rezult_matrix(this->rows, rhs.cols);
+        Matrix result_matrix(this->rows, rhs.cols);
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < rhs.cols; ++j) {
-                rezult_matrix.matrix_content[i][j]= 0;
-                for (size_t k = 0; k < this->cols; ++k)
-                    rezult_matrix.matrix_content[i][j] += this->matrix_content[i][k] * rhs.matrix_content[k][j];
+                result_matrix.matrix_content[i][j]= 0;
+                for (size_t k = 0; k < this->cols; ++k) {
+                    result_matrix.matrix_content[i][j] += this->matrix_content[i][k] * rhs.matrix_content[k][j];
+                }
             }
         }
-        return rezult_matrix;
+        return result_matrix;
     }
 
-    Matrix Matrix::operator*(double val) const {
+    Matrix Matrix::operator*(const double val) const {
         Matrix temp(this->rows, this->cols);
         for (size_t i = 0; i < this->rows; ++i) {
             for (size_t j = 0; j < this->cols; ++j) {
@@ -156,7 +156,7 @@ namespace prep {
         return temp;
     }
 
-    Matrix operator*(double val, const Matrix& matrix) {
+    Matrix operator*(const double val, const Matrix& matrix) {
         Matrix temp(matrix.rows, matrix.cols);
         for (size_t i = 0; i < matrix.rows; ++i) {
             for (size_t j = 0; j < matrix.cols; ++j) {
@@ -176,7 +176,7 @@ namespace prep {
         return temp;
     }
 
-    void minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, size_t row, size_t col) {
+    void Matrix::minus_row_col(const Matrix& origin_matrix, Matrix& temp_matrix, const size_t row, const size_t col) {
         size_t miss_row = 0;
 
         for (size_t i = 0; i < origin_matrix.rows - 1; ++i) {
@@ -193,7 +193,7 @@ namespace prep {
         }
     }
 
-    double recursive_det(Matrix& origin_matrix) {
+    double Matrix::recursive_det(const Matrix& origin_matrix) {
         double temp_det = 0;
         if (origin_matrix.rows == 1) {
             temp_det = origin_matrix(0, 0);
