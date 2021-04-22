@@ -31,4 +31,4 @@ namespace wearable {
     int wearable::get_weight() const {
         return weight;
     }
-}
+}  // namespace wearable

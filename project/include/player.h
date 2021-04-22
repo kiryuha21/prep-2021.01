@@ -1,8 +1,9 @@
 #pragma once
 
+#include <vector>
+
 #include "enemy.h"
 #include "wearable.h"
-#include <vector>
 
 namespace player {
 
@@ -25,7 +26,7 @@ class player {
     int get_health() const;
 
     void take_damage(const enemy::enemy& _enemy);
-    
+
     void put_on_wearable(const wearable::wearable& _wearable);
 };
 
