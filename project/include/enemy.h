@@ -3,31 +3,34 @@
 #include <string>
 
 namespace enemy {
-    class enemy {
-    private:
-        int damage;
-        int health;
-        std::string enemy_name;
-        int x, y;
-    public:
-        explicit enemy(const std::string& enemy_name, int x, int y);
 
-        enemy();
+class enemy {
+ private:
+    int damage;
+    int health;
+    std::string enemy_name;
+    int x, y;
 
-        ~enemy() = default;
+ public:
+    explicit enemy(const std::string& enemy_name, int x, int y);
 
-        int get_x() const;
+    enemy();
 
-        int get_y() const;
+    ~enemy() = default;
 
-        std::string get_name() const;
+    int get_x() const;
 
-        int get_health() const;
+    int get_y() const;
 
-        int get_damage() const;
+    std::string get_name() const;
 
-        void die();
+    int get_health() const;
 
-        void take_damage();
-    };
-}
+    int get_damage() const;
+
+    void die();
+
+    void take_damage();
+};
+
+}  // namespace enemy

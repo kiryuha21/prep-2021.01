@@ -86,4 +86,4 @@ namespace map {
     int map::get_player_health() {
         return main_player.get_health();
     }
-}
+}  // namespace map

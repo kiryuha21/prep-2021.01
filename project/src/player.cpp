@@ -24,4 +24,4 @@ namespace player {
     void player::take_damage(const enemy::enemy& _enemy) {
         health -= _enemy.get_damage();
     }
-}
+}  // namespace player

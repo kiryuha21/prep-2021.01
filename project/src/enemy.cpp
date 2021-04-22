@@ -45,4 +45,4 @@ namespace enemy {
     void enemy::die() {
         health = 0;
     }
-}
+}  // namespace enemy
