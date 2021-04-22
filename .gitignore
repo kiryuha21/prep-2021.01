@@ -78,16 +78,3 @@ venv
 cmake-build-debug/
 *~
 *.swp
-
-# strange files that exist for some unknown reason
-CMakeFiles/
-CTestTestfile.cmake
-Testing/
-cmake_install.cmake
-project/CMakeFiles/
-project/CTestTestfile.cmake
-project/Makefile
-project/cmake_install.cmake
-project/tests/
-
-
