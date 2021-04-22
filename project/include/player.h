@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
+#include <string>
 
 #include "enemy.h"
 #include "wearable.h"
@@ -14,6 +16,7 @@ class player {
     int armour_points = 0;
     int armour_weight = 0;
     std::vector<wearable::wearable> wearables_on;
+
  public:
     void move_x(int shift);
 
@@ -25,9 +28,15 @@ class player {
 
     int get_health() const;
 
+    int get_armour_points() const;
+
     void take_damage(const enemy::enemy& _enemy);
 
     void put_on_wearable(const wearable::wearable& _wearable);
+
+    void throw_out_wearable(const std::string& wearable_type);
+
+    void throw_offer();
 };
 
 }  // namespace player

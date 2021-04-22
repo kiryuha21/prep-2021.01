@@ -21,16 +21,19 @@ class map {
     const std::set<std::string> all_enemies = {"wolf", "dog", "rat"};
     player::player main_player;
     enemy::enemy current_enemy;
+    wearable::wearable current_wearable;
     std::vector<enemy::enemy> enemies;
     std::vector<wearable::wearable> wearables;
+    bool search_for_enemy();
+    bool search_for_wearables();
+    void delete_wearable(wearable::wearable _wearable);
+
  public:
     explicit map(const std::string& filename);
 
     ~map() = default;
 
     void show_info();
-
-    bool search_for_enemy();
 
     void take_double_damage();
 

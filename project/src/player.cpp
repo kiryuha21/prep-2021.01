@@ -21,6 +21,10 @@ namespace player {
         return health;
     }
 
+    int player::get_armour_points() const {
+        return armour_points;
+    }
+
     void player::take_damage(const enemy::enemy& _enemy) {
         health -= _enemy.get_damage();
     }
@@ -29,5 +33,23 @@ namespace player {
         armour_points += _wearable.get_armour_points();
         armour_weight += _wearable.get_weight();
         wearables_on.push_back(_wearable);
+    }
+
+    void player::throw_out_wearable(const std::string& wearable_type) {
+        size_t wearables_on_size = wearables_on.size();
+        for (size_t i = 0; i < wearables_on_size; ++i) {
+            if (wearable_type == wearables_on[i].get_type()) {
+                wearables_on.erase(wearables_on.begin() + i);
+                return;
+            }
+        }
+    }
+
+    void player::throw_offer() {
+        if (!wearables_on.empty()) {
+            for (const wearable::wearable& i : wearables_on) {
+                std::cout << " * throw " << i.get_type() << std::endl;
+            }
+        }
     }
 }  // namespace player

@@ -24,16 +24,33 @@ namespace map {
         return false;
     }
 
+    bool map::search_for_wearables() {
+        for (wearable::wearable &i : wearables) {
+            if (i.get_x() == main_player.get_x() && i.get_y() == main_player.get_y() && i.get_armour_points() != 0) {
+                current_wearable = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
     void map::show_info() {
         bool enemy_found = search_for_enemy();
         if (enemy_found && !current_enemy.is_injured()) {
             std::cout << std::endl << current_enemy.get_name() << " found, " << current_enemy.get_health() << " hp" << std::endl;
             std::cout << "Supported actions:" << std::endl << " * kick enemy" << std::endl;
         }
+
         if (current_enemy.get_health() > 0 && current_enemy.is_injured()) {
             enemy_found = true;
             std::cout << "Supported actions:" << std::endl << " * kick enemy" << std::endl;
         }
+
+        bool wearable_found = search_for_wearables();
+        if (wearable_found) {
+            std::cout << current_wearable.get_type() << " found" << std::endl;
+        }
+
         if (!enemy_found) {
             bool actions_exist = false;
             std::cout << "Supported actions:" << std::endl;
@@ -53,11 +70,15 @@ namespace map {
                 std::cout << " * move up" << std::endl;
                 actions_exist = true;
             }
+            if (wearable_found) {
+                std::cout << " * pick " << current_wearable.get_type() << std::endl;
+                main_player.throw_offer();
+            }
             if (!actions_exist) {
                 std::cout << std::endl;
             }
         }
-        std::cout << main_player.get_x() << " x " << main_player.get_y() << ", hp: " << main_player.get_health() << " > ";
+        std::cout << main_player.get_x() << " x " << main_player.get_y() << ", hp: " << main_player.get_health() << ", armor: " << main_player.get_armour_points() << " > ";
     }
 
     void map::make_action(const std::string& action) {
@@ -86,6 +107,15 @@ namespace map {
                     std::cout << std::endl << "moved" << std::endl;
                 }
             }
+            if (action == "pick " + current_wearable.get_type()) {
+                main_player.put_on_wearable(current_wearable);
+                delete_wearable(current_wearable);
+                std::cout << std::endl << "clothes worn" << std::endl;
+            }
+            if (action.find("throw") != std::string::npos) {
+                std::string throw_wearable = action.substr(6);
+                main_player.throw_out_wearable(throw_wearable);
+            }
         }
         if (action == "kick enemy") {
             take_double_damage();
@@ -104,6 +134,16 @@ namespace map {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    void map::delete_wearable(wearable::wearable _wearable) {
+        size_t wearables_size = wearables.size();
+        for (size_t i = 0; i < wearables_size; ++i) {
+            if (_wearable == wearables[i]) {
+                wearables.erase(wearables.begin() + i);
+                return;
             }
         }
     }
