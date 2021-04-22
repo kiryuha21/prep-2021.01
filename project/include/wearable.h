@@ -13,6 +13,10 @@ private:
 
 public:
     wearable(const std::string& type, int x, int y);
+
+    int get_weight() const;
+
+    int get_armour_points() const;
 };
 
 }

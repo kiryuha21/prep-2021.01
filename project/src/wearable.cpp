@@ -23,4 +23,12 @@ namespace wearable {
             armour_points = 1;
         }
     }
+
+    int wearable::get_armour_points() const {
+        return armour_points;
+    }
+
+    int wearable::get_weight() const {
+        return weight;
+    }
 }
