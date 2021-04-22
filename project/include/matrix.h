@@ -1,11 +1,33 @@
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#ifndef PROJECT_INCLUDE_MATRIX_H_
+#define PROJECT_INCLUDE_MATRIX_H_
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <float.h>
+#include <math.h>
+
+#define CREATE_ERR (-1)
+#define GET_ERR    (-2)
+#define SET_ERR    (-3)
+#define DET_ERR    (-4)
+#define TRANSP_ERR (-5)
+#define SUM_ERR    (-6)
+#define FREE_ERR   (-7)
+#define SUB_ERR    (-8)
+#define MUL_ERR    (-9)
+#define INV_ERR    (-10)
 
 
 typedef struct Matrix {
+    double** matrix_content;
+    size_t rows;
+    size_t cols;
 } Matrix;
+
+// support functions
+double recursive_det(const Matrix *origin_matrix);
+int minus_row_col(const Matrix *origin_matrix, Matrix *temp_matrix, size_t row, size_t col);
 
 // Init/release operations
 Matrix* create_matrix_from_file(const char* path_file);
@@ -18,7 +40,7 @@ int get_cols(const Matrix* matrix, size_t* cols);
 int get_elem(const Matrix* matrix, size_t row, size_t col, double* val);
 int set_elem(Matrix* matrix, size_t row, size_t col, double val);
 
-//Math operations
+// Math operations
 Matrix* mul_scalar(const Matrix* matrix, double val);
 Matrix* transp(const Matrix* matrix);
 
@@ -31,5 +53,4 @@ int det(const Matrix* matrix, double* val);
 Matrix* adj(const Matrix* matrix);
 Matrix* inv(const Matrix* matrix);
 
-
-#endif //_MATRIX_H_
+#endif  // PROJECT_INCLUDE_MATRIX_H_
