@@ -6,10 +6,11 @@ namespace enemy {
 
 class enemy {
  private:
-    int damage;
-    int health;
+    int damage = 0;
+    int health = 0;
     std::string enemy_name;
     int x, y;
+    bool injured = false;
 
  public:
     explicit enemy(const std::string& enemy_name, int x, int y);
@@ -31,6 +32,8 @@ class enemy {
     void die();
 
     void take_damage();
+
+    bool is_injured() const;
 };
 
 }  // namespace enemy

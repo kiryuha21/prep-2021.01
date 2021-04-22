@@ -36,6 +36,11 @@ namespace enemy {
 
     void enemy::take_damage() {
         health -= 1;
+        injured = true;
+    }
+
+    bool enemy::is_injured() const {
+        return injured;
     }
 
     int enemy::get_damage() const {

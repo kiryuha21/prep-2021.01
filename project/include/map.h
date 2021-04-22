@@ -27,6 +27,10 @@ class map {
 
     void show_info();
 
+    bool search_for_enemy();
+
+    void take_double_damage();
+
     void make_action(const std::string& action);
 
     int get_player_health();
