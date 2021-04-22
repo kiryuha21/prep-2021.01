@@ -1,6 +1,7 @@
 #pragma once
 
 #include "enemy.h"
+#include "wearable.h"
 
 namespace player {
 
@@ -8,6 +9,7 @@ class player {
  private:
     int health = 100;
     int x = 0, y = 0;
+    int armour_points = 0;
  public:
     void move_x(int shift);
 

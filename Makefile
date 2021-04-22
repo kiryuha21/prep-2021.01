@@ -8,7 +8,8 @@ SRCS = \
        project/src/main.cpp \
        project/src/enemy.cpp \
        project/src/map.cpp \
-       project/src/player.cpp
+       project/src/player.cpp \
+       project/src/wearable.cpp
 
 .PHONY: all clean
 

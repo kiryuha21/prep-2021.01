@@ -3,8 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <cstring>
 #include <string>
+#include <set>
 
 #include "player.h"
 
@@ -17,9 +17,12 @@ class map {
  private:
     int x_size;
     int y_size;
+    const std::set<std::string> all_wearables = {"armor", "helmet", "shield", "pants", "T-Shirt"};
+    const std::set<std::string> all_enemies = {"wolf", "dog", "rat"};
     player::player main_player;
-    std::vector<enemy::enemy> enemies;
     enemy::enemy current_enemy;
+    std::vector<enemy::enemy> enemies;
+    std::vector<wearable::wearable> wearables;
  public:
     explicit map(const std::string& filename);
 
