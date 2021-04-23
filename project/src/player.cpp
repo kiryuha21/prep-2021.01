@@ -26,7 +26,11 @@ namespace player {
     }
 
     void player::take_damage(const enemy::enemy& _enemy) {
-        health -= _enemy.get_damage();
+        if (armour_points >= _enemy.get_damage()) {
+            health -= 1;
+        } else {
+            health -= (_enemy.get_damage() - armour_points);
+        }
     }
 
     void player::put_on_wearable(const wearable::wearable& _wearable) {
@@ -39,6 +43,7 @@ namespace player {
         size_t wearables_on_size = wearables_on.size();
         for (size_t i = 0; i < wearables_on_size; ++i) {
             if (wearable_type == wearables_on[i].get_type()) {
+                armour_points -= wearables_on[i].get_armour_points();
                 wearables_on.erase(wearables_on.begin() + i);
                 return;
             }

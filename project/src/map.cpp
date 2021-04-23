@@ -6,11 +6,17 @@ namespace map {
         if (!(file >> x_size >> y_size).good()) {
             throw std::istream::failure("file reading problem");
         }
-        std::string enemy_name;
+        std::string object_name;
         int x, y;
-        while (file >> x >> y >> enemy_name) {
-            enemy::enemy new_enemy(enemy_name, x, y);
-            enemies.push_back(new_enemy);
+        while (file >> x >> y >> object_name) {
+            if (all_enemies.find(object_name) != all_enemies.end()) {
+                enemy::enemy new_enemy(object_name, x, y);
+                enemies.push_back(new_enemy);
+            }
+            if (all_wearables.find(object_name) != all_wearables.end()) {
+                wearable::wearable wearable(object_name, x, y);
+                wearables.push_back(wearable);
+            }
         }
     }
 
@@ -48,7 +54,7 @@ namespace map {
 
         bool wearable_found = search_for_wearables();
         if (wearable_found) {
-            std::cout << current_wearable.get_type() << " found" << std::endl;
+            std::cout << std::endl << current_wearable.get_type() << " found" << std::endl;
         }
 
         if (!enemy_found) {
@@ -84,26 +90,38 @@ namespace map {
     void map::make_action(const std::string& action) {
         if (!search_for_enemy()) {
             if (action == "move left") {
+                if (search_for_wearables()) {
+                    delete_wearable(current_wearable);
+                }
                 main_player.move_x(-1);
-                if (!search_for_enemy()) {
+                if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
             }
             if (action == "move right") {
+                if (search_for_wearables()) {
+                    delete_wearable(current_wearable);
+                }
                 main_player.move_x(1);
-                if (!search_for_enemy()) {
+                if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
             }
             if (action == "move down") {
+                if (search_for_wearables()) {
+                    delete_wearable(current_wearable);
+                }
                 main_player.move_y(-1);
-                if (!search_for_enemy()) {
+                if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
             }
             if (action == "move up") {
+                if (search_for_wearables()) {
+                    delete_wearable(current_wearable);
+                }
                 main_player.move_y(1);
-                if (!search_for_enemy()) {
+                if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
             }
@@ -115,6 +133,7 @@ namespace map {
             if (action.find("throw") != std::string::npos) {
                 std::string throw_wearable = action.substr(6);
                 main_player.throw_out_wearable(throw_wearable);
+                std::cout << std::endl << "the " << throw_wearable << " is thrown out";
             }
         }
         if (action == "kick enemy") {
