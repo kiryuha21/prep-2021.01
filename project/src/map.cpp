@@ -53,8 +53,9 @@ namespace map {
         }
 
         bool wearable_found = search_for_wearables();
-        if (wearable_found) {
+        if (wearable_found && !wearable_already_seen) {
             std::cout << std::endl << current_wearable.get_type() << " found" << std::endl;
+            wearable_already_seen = true;
         }
 
         if (!enemy_found) {
@@ -97,6 +98,7 @@ namespace map {
                 if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
+                wearable_already_seen = false;
             }
             if (action == "move right") {
                 if (search_for_wearables()) {
@@ -106,6 +108,7 @@ namespace map {
                 if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
+                wearable_already_seen = false;
             }
             if (action == "move down") {
                 if (search_for_wearables()) {
@@ -115,6 +118,7 @@ namespace map {
                 if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
+                wearable_already_seen = false;
             }
             if (action == "move up") {
                 if (search_for_wearables()) {
@@ -124,6 +128,7 @@ namespace map {
                 if (!search_for_enemy() && !search_for_wearables()) {
                     std::cout << std::endl << "moved" << std::endl;
                 }
+                wearable_already_seen = false;
             }
             if (action == "pick " + current_wearable.get_type()) {
                 main_player.put_on_wearable(current_wearable);
@@ -132,8 +137,8 @@ namespace map {
             }
             if (action.find("throw") != std::string::npos) {
                 std::string throw_wearable = action.substr(6);
+                std::cout << std::endl << "the " << throw_wearable << " is thrown out" << std::endl;
                 main_player.throw_out_wearable(throw_wearable);
-                std::cout << std::endl << "the " << throw_wearable << " is thrown out";
             }
         }
         if (action == "kick enemy") {

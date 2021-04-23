@@ -17,6 +17,7 @@ class map {
  private:
     int x_size;
     int y_size;
+    bool wearable_already_seen = false;
     const std::set<std::string> all_wearables = {"armor", "helmet", "shield", "pants", "T-Shirt"};
     const std::set<std::string> all_enemies = {"wolf", "dog", "rat"};
     player::player main_player;
