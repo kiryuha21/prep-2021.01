@@ -50,6 +50,14 @@ namespace player {
         }
     }
 
+    bool player::cmp(const wearable::wearable &first, const wearable::wearable &second) {
+        return first.get_type() > second.get_type();
+    }
+
+    void player::alph_sort() {
+        sort(wearables_on.begin(), wearables_on.end(), cmp);
+    }
+
     void player::throw_offer() {
         if (!wearables_on.empty()) {
             for (const wearable::wearable& i : wearables_on) {

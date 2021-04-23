@@ -15,8 +15,8 @@ namespace map {
 
 class map {
  private:
-    int x_size;
-    int y_size;
+    int x_size = 0;
+    int y_size = 0;
     bool wearable_already_seen = false;
     const std::set<std::string> all_wearables = {"armor", "helmet", "shield", "pants", "T-Shirt"};
     const std::set<std::string> all_enemies = {"wolf", "dog", "rat"};

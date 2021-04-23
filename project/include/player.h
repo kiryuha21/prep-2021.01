@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "enemy.h"
 #include "wearable.h"
@@ -16,6 +17,8 @@ class player {
     int armour_points = 0;
     int armour_weight = 0;
     std::vector<wearable::wearable> wearables_on;
+    void alph_sort();
+    static bool cmp(const wearable::wearable& first, const wearable::wearable& second);
 
  public:
     void move_x(int shift);

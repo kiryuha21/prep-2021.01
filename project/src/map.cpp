@@ -3,9 +3,7 @@
 namespace map {
     map::map(const std::string& filename) {
         std::ifstream file(filename);
-        if (!(file >> x_size >> y_size).good()) {
-            throw std::istream::failure("file reading problem");
-        }
+        file >> x_size >> y_size;
         std::string object_name;
         int x, y;
         while (file >> x >> y >> object_name) {
