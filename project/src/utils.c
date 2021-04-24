@@ -12,16 +12,13 @@ char* remove_quotes(char* original, int* mark) {
     size_t orig_len = strlen(original);
     char* temp = malloc(sizeof(char) * (orig_len - 1));
 
-    for (size_t i = 0; i < orig_len - 1; ++i) {
-        temp[i] = '\0';
-    }
-
     if (temp == NULL) {
         return NULL;
     }
-    for (size_t i = 1; i < orig_len - 1; ++i) {
-        temp[i - 1] = original[i];
-    }
+
+    memset(temp, '\0', orig_len - 1);
+    memcpy(temp, original + 1, orig_len - 2);
+
     original = temp;
     *mark = 1;
     return original;
@@ -46,13 +43,9 @@ char* remove_segue(char* original, int* amount) {
         return NULL;
     }
 
-    for (size_t i = 0; i < orig_len - size + 1; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', orig_len - size + 1);
+    memcpy(temp, original, orig_len - size);
 
-    for (size_t i = 0; i < orig_len - size; ++i) {
-        temp[i] = original[i];
-    }
     original = temp;
     return original;
 }
@@ -72,20 +65,14 @@ char* add_inf_check(char* main_info, char* add_info) {
     char* temp_add_info = remove_segue(add_info, &amount);
     char* temp = (char*)malloc(sizeof(char) * (main_len + add_len - amount + 1));
 
-    if (temp == NULL) {
+    if (temp == NULL || temp_add_info == NULL) {
         return NULL;
     }
 
-    for (size_t i = 0; i < main_len + add_len - amount + 1; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', main_len + add_len - amount + 1);
+    memcpy(temp, main_info, main_len);
+    memcpy(temp + main_len, temp_add_info + size, add_len - amount);
 
-    for (size_t i = 0; i < main_len; ++i) {
-        temp[i] = main_info[i];
-    }
-    for (size_t i = size + main_len; i < main_len + add_len - amount + 1; ++i) {
-        temp[i] = temp_add_info[i - main_len];
-    }
     free(temp_add_info);
     free(main_info);
     main_info = temp;
@@ -109,9 +96,7 @@ char* delete_spaces(char* original, int* mark) {
         return NULL;
     }
 
-    for (size_t i = 0; i < orig_len; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', orig_len);
 
     for (size_t i = 0; i < orig_len; ++i) {
         if (original[i] != ' ') {
@@ -140,13 +125,12 @@ char* delete_semicolon(char* original, int* mark) {
         return NULL;
     }
 
-    for (size_t i = 0; i < orig_len; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', orig_len);
 
     for (size_t i = 0; original[i] != ';'; ++i) {
         temp[i] = original[i];
     }
+
     original = temp;
     *mark = 1;
     return original;
@@ -164,15 +148,12 @@ char* delete_fspaces(char* original, int* mark) {
         return NULL;
     }
 
-    for (size_t i = 0; i < orig_len; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', orig_len);
 
     size_t pos;
     for (pos = 0; original[pos] == ' ' ; ++pos) { }
-    for (size_t i = pos; i < orig_len; ++i) {
-        temp[i - pos] = original[i];
-    }
+    memcpy(temp, original + pos, orig_len - pos);
+
     original = temp;
     *mark = 1;
     return original;
@@ -186,48 +167,17 @@ char* tolower_w(char* original) {
         return NULL;
     }
 
-    for (size_t i = 0; i < orig_len + 1; ++i) {
-        temp[i] = '\0';
-    }
+    memset(temp, '\0', orig_len + 1);
+
     for (size_t i = 0; i < orig_len; ++i) {
         temp[i] = (char)tolower(original[i]);
     }
+
     original = temp;
     return original;
 }
 
-
-size_t find_last_index(char* original, char* to_find) {
-    char* pointer;
-    if ((pointer = strstr(original, to_find)) == NULL) {
-        return -1;
-    }
-    size_t index;
-    char* or_pointer = original;
-    for (index = 0; or_pointer != pointer; ++index, ++or_pointer) { }
-    index += strlen(to_find);
-    return index - 1;
-}
-
-char* copy_from(char* original, size_t index) {
-    size_t orig_len = strlen(original);
-    char* temp = (char*)malloc(sizeof(char) * (orig_len + 1));
-    if (temp == NULL) {
-        return NULL;
-    }
-
-    for (size_t i = 0; i < orig_len + 1; ++i) {
-        temp[i] = '\0';
-    }
-
-    for (size_t i = index; i < orig_len; ++i) {
-        temp[i - index] = original[i];
-    }
-    original = temp;
-    return original;
-}
-
-int free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* mail) {
+bool free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* mail) {
     if (from != NULL) {
         free(from);
     }
@@ -243,5 +193,5 @@ int free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* m
     if (mail != NULL) {
         fclose(mail);
     }
-    return 0;
+    return true;
 }
