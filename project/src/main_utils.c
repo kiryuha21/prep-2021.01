@@ -4,6 +4,7 @@ int unique_extra_inf(char** header, char** line, FILE* mail) {
     size_t line_size = 0;
     while (true) {
         char* temp = add_inf_check(*header, *line);
+        *line = NULL;
         if (temp == NULL) {
             return ALLOC_ERR;
         }
@@ -12,7 +13,6 @@ int unique_extra_inf(char** header, char** line, FILE* mail) {
         } else {
             free(*header);
             *header = temp;
-            *line = NULL;
             getline(line, &line_size, mail);
         }
     }
