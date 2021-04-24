@@ -10,13 +10,12 @@ char* remove_quotes(char* original, int* mark) {
         return original;
     }
     size_t orig_len = strlen(original);
-    char* temp = malloc(sizeof(char) * (orig_len - 1));
+    char* temp = calloc(orig_len - 1, sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
 
-    memset(temp, '\0', orig_len - 1);
     memcpy(temp, original + 1, orig_len - 2);
 
     original = temp;
@@ -31,19 +30,18 @@ char* remove_segue(char* original, int* amount) {
     }
 
     size_t orig_len = strlen(original);
-    if (original[orig_len - 2] == '\r') {
+    if (original[orig_len - 2] == '\r' || original[orig_len - 2] == '\n') {
         size = 2;
     } else {
         size = 1;
     }
     *amount = size;
-    char* temp = malloc(sizeof(char) * (orig_len - size + 1));
+    char* temp = calloc((orig_len - size + 1), sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
 
-    memset(temp, '\0', orig_len - size + 1);
     memcpy(temp, original, orig_len - size);
 
     original = temp;
@@ -63,13 +61,12 @@ char* add_inf_check(char* main_info, char* add_info) {
     size_t add_len = strlen(add_info);
 
     char* temp_add_info = remove_segue(add_info, &amount);
-    char* temp = (char*)malloc(sizeof(char) * (main_len + add_len - amount + 1));
+    char* temp = (char*)calloc((main_len + add_len - amount + 1), sizeof(char));
 
     if (temp == NULL || temp_add_info == NULL) {
         return NULL;
     }
 
-    memset(temp, '\0', main_len + add_len - amount + 1);
     memcpy(temp, main_info, main_len);
     memcpy(temp + main_len, temp_add_info + size, add_len - amount);
 
@@ -90,13 +87,11 @@ char* delete_spaces(char* original, int* mark) {
     }
 
     size_t orig_len = strlen(original);
-    char* temp = (char*)malloc(sizeof(char) * orig_len);
+    char* temp = (char*)calloc(orig_len, sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
-
-    memset(temp, '\0', orig_len);
 
     for (size_t i = 0; i < orig_len; ++i) {
         if (original[i] != ' ') {
@@ -119,13 +114,11 @@ char* delete_semicolon(char* original, int* mark) {
     }
 
     size_t orig_len = strlen(original);
-    char* temp = (char*)malloc(sizeof(char) * orig_len);
+    char* temp = (char*)calloc(orig_len, sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
-
-    memset(temp, '\0', orig_len);
 
     for (size_t i = 0; original[i] != ';'; ++i) {
         temp[i] = original[i];
@@ -142,13 +135,11 @@ char* delete_fspaces(char* original, int* mark) {
         return original;
     }
     size_t orig_len = strlen(original);
-    char* temp = (char*)malloc(sizeof(char) * orig_len);
+    char* temp = (char*)calloc(orig_len, sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
-
-    memset(temp, '\0', orig_len);
 
     size_t pos;
     for (pos = 0; original[pos] == ' ' ; ++pos) { }
@@ -161,13 +152,11 @@ char* delete_fspaces(char* original, int* mark) {
 
 char* tolower_w(char* original) {
     size_t orig_len = strlen(original);
-    char* temp = (char*)malloc(sizeof(char) * (orig_len + 1));
+    char* temp = (char*)calloc((orig_len + 1), sizeof(char));
 
     if (temp == NULL) {
         return NULL;
     }
-
-    memset(temp, '\0', orig_len + 1);
 
     for (size_t i = 0; i < orig_len; ++i) {
         temp[i] = (char)tolower(original[i]);

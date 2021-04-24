@@ -30,7 +30,7 @@ int main(int argc, const char **argv) {
 
     while (!feof(mail)) {
         getline(&line, &line_size, mail);
-        if (strcmp(line, "\r\n") == 0 || line[0] == '\n') {
+        if (strcmp(line, "\r\n") == 0 || strcmp(line, "\n\r") == 0 || line[0] == '\n' || line[0] == '\r') {
             break;
         }
 
@@ -67,12 +67,11 @@ int main(int argc, const char **argv) {
             date_fl = false;
         }
 
+    	int search_result;
+
         // searching for "From" header
 
-        char* pointer;
-
-        /*int search_result;
-        search_result = find_from_header(&pointers->from, &line, &amount);
+        search_result = find_simple_header(&pointers->from, &line, "From:", &amount);
         if (search_result == SUCCESSFUL_SEARCH) {
             from_fl = true;
         }
@@ -80,48 +79,30 @@ int main(int argc, const char **argv) {
             free_pointers(pointers, mail);
             free(line);
             return ALLOC_ERR;
-        }*/
-
-        if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
-            int fspace_mark;
-            free(pointers->from);
-            char* temp_from = remove_segue(pointer + 5, &amount);
-            pointers->from = delete_fspaces(temp_from, &fspace_mark);
-            if (pointers->from == NULL) {
-                free_pointers(pointers, mail);
-                free(line);
-                return ALLOC_ERR;
-            }
-            if (fspace_mark) {
-                free(temp_from);
-            }
-            from_fl = true;
         }
 
         // searching for "To" header
 
-        if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
-            free(pointers->to);
-            pointers->to = remove_segue(pointer + 4, &amount);
-            if (pointers->to == NULL) {
-                free_pointers(pointers, mail);
-                free(line);
-                return ALLOC_ERR;
-            }
+        search_result = find_simple_header(&pointers->to, &line, "To:", &amount);
+        if (search_result == SUCCESSFUL_SEARCH) {
             to_fl = true;
+        }
+        if (search_result == ALLOC_ERR) {
+            free_pointers(pointers, mail);
+            free(line);
+            return ALLOC_ERR;
         }
 
         // searching for "Date" header
 
-        if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
-            free(pointers->date);
-            pointers->date = remove_segue(pointer + 6, &amount);
-            if (pointers->date == NULL) {
-                free_pointers(pointers, mail);
-                free(line);
-                return ALLOC_ERR;
-            }
+        search_result = find_simple_header(&pointers->date, &line, "Date:", &amount);
+        if (search_result == SUCCESSFUL_SEARCH) {
             date_fl = true;
+        }
+        if (search_result == ALLOC_ERR) {
+            free_pointers(pointers, mail);
+            free(line);
+            return ALLOC_ERR;
         }
 
         // searching for boundary key
