@@ -5,4 +5,6 @@
 
 int unique_extra_inf(char** header, char** line, FILE* mail);
 
+int find_from_header(char** header, char** line, int* amount);
+
 #endif //UNTITLED1_MAIN_UTILS_H

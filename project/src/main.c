@@ -12,13 +12,9 @@ int main(int argc, const char **argv) {
         return OPEN_ERR;
     }
 
-    char* from = (char*)calloc(1, sizeof(char));
-    char* to = (char*)calloc(1, sizeof(char));
-    char* boundary = (char*)calloc(1, sizeof(char));
-    char* date = (char*)calloc(1, sizeof(char));
-
-    if (from == NULL || to == NULL || boundary == NULL || date == NULL) {
-    	free_main_pointers(from, to, date, boundary, mail);
+    main_pointers* pointers = create_main_pointers();
+    if (pointers == NULL) {
+        fclose(mail);
         return ALLOC_ERR;
     }
 
@@ -41,8 +37,8 @@ int main(int argc, const char **argv) {
         // check for additional information for "From" header
 
         if (from_fl) {
-            if (unique_extra_inf(&from, &line, mail) != 0) {
-                free_main_pointers(from, to, date, boundary, mail);
+            if (unique_extra_inf(&pointers->from, &line, mail) != 0) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -52,8 +48,8 @@ int main(int argc, const char **argv) {
         // check for additional information for "To" header
 
         if (to_fl) {
-            if (unique_extra_inf(&to, &line, mail) != 0) {
-                free_main_pointers(from, to, date, boundary, mail);
+            if (unique_extra_inf(&pointers->to, &line, mail) != 0) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -63,8 +59,8 @@ int main(int argc, const char **argv) {
         // check for additional information for "Date" header
 
         if (date_fl) {
-            if (unique_extra_inf(&date, &line, mail) != 0) {
-                free_main_pointers(from, to, date, boundary, mail);
+            if (unique_extra_inf(&pointers->date, &line, mail) != 0) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -74,13 +70,25 @@ int main(int argc, const char **argv) {
         // searching for "From" header
 
         char* pointer;
+
+        /*int search_result;
+        search_result = find_from_header(&pointers->from, &line, &amount);
+        if (search_result == SUCCESSFUL_SEARCH) {
+            from_fl = true;
+        }
+        if (search_result == ALLOC_ERR) {
+            free_pointers(pointers, mail);
+            free(line);
+            return ALLOC_ERR;
+        }*/
+
         if ((pointer = strstr(line, "From:")) != NULL && line[0] == 'F') {
             int fspace_mark;
-            free(from);
+            free(pointers->from);
             char* temp_from = remove_segue(pointer + 5, &amount);
-            from = delete_fspaces(temp_from, &fspace_mark);
-            if (from == NULL) {
-                free_main_pointers(from, to, date, boundary, mail);
+            pointers->from = delete_fspaces(temp_from, &fspace_mark);
+            if (pointers->from == NULL) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -93,10 +101,10 @@ int main(int argc, const char **argv) {
         // searching for "To" header
 
         if ((pointer = strstr(line, "To:")) != NULL && line[0] == 'T') {
-            free(to);
-            to = remove_segue(pointer + 4, &amount);
-            if (to == NULL) {
-                free_main_pointers(from, to, date, boundary, mail);
+            free(pointers->to);
+            pointers->to = remove_segue(pointer + 4, &amount);
+            if (pointers->to == NULL) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -106,10 +114,10 @@ int main(int argc, const char **argv) {
         // searching for "Date" header
 
         if ((pointer = strstr(line, "Date:")) != NULL && line[0] == 'D') {
-            free(date);
-            date = remove_segue(pointer + 6, &amount);
-            if (date == NULL) {
-                free_main_pointers(from, to, date, boundary, mail);
+            free(pointers->date);
+            pointers->date = remove_segue(pointer + 6, &amount);
+            if (pointers->date == NULL) {
+                free_pointers(pointers, mail);
                 free(line);
                 return ALLOC_ERR;
             }
@@ -126,14 +134,14 @@ int main(int argc, const char **argv) {
                 size_t index = strstr(temp_line, "boundary=") - temp_line + 9;
 
                 int semicolon_mark, space_mark, quotes_mark;
-                free(boundary);
+                free(pointers->boundary);
                 char* temp_boundary = strdup(line + index);
                 char* first_temp_boundary = remove_segue(temp_boundary, &amount);
                 char* semicolon_temp = delete_semicolon(first_temp_boundary, &semicolon_mark);
                 char* second_temp_boundary = remove_quotes(semicolon_temp, &quotes_mark);
-                boundary = delete_spaces(second_temp_boundary, &space_mark);
-                if (boundary == NULL) {
-                    free_main_pointers(from, to, date, boundary, mail);
+                pointers->boundary = delete_spaces(second_temp_boundary, &space_mark);
+                if (pointers->boundary == NULL) {
+                    free_pointers(pointers, mail);
                     free(line);
                     return ALLOC_ERR;
                 }
@@ -173,8 +181,8 @@ int main(int argc, const char **argv) {
         // searching for matches with boundary key
 
         if (boundary_set) {
-            if (strstr(line, boundary) != NULL) {
-                size_t boundary_len = strlen(boundary);
+            if (strstr(line, pointers->boundary) != NULL) {
+                size_t boundary_len = strlen(pointers->boundary);
                 if ((amount == 2 && boundary_len == line_len - 4) ||
                     (amount == 1 && boundary_len == line_len - 3))
                     ++parts;
@@ -190,9 +198,9 @@ int main(int argc, const char **argv) {
         }
     }
 
-    printf("%s|%s|%s|%d", from, to, date, parts);
+    printf("%s|%s|%s|%d", pointers->from, pointers->to, pointers->date, parts);
 
-    free_main_pointers(from, to, date, boundary, mail);
+    free_pointers(pointers, mail);
     free(line);
     return 0;
 }

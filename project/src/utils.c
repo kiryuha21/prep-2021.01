@@ -177,21 +177,45 @@ char* tolower_w(char* original) {
     return original;
 }
 
-bool free_main_pointers(char* from, char* to, char* date, char* boundary, FILE* mail) {
-    if (from != NULL) {
-        free(from);
+bool free_main_pointers(main_pointers* pointers) {
+    if (pointers != NULL) {
+        if (pointers->from != NULL) {
+            free(pointers->from);
+        }
+        if (pointers->to != NULL) {
+            free(pointers->to);
+        }
+        if (pointers->date != NULL) {
+            free(pointers->date);
+        }
+        if (pointers->boundary != NULL) {
+            free(pointers->boundary);
+        }
+        free(pointers);
     }
-    if (to != NULL) {
-        free(to);
-    }
-    if (date != NULL) {
-        free(date);
-    }
-    if (boundary != NULL) {
-        free(boundary);
-    }
+    return true;
+}
+
+bool free_pointers(main_pointers* pointers, FILE* mail) {
+    free_main_pointers(pointers);
     if (mail != NULL) {
         fclose(mail);
     }
     return true;
+}
+
+main_pointers* create_main_pointers() {
+    main_pointers* temp_pointers = (main_pointers*) calloc(1, sizeof(main_pointers));
+    if (temp_pointers == NULL) {
+        return NULL;
+    }
+    temp_pointers->from = (char*)calloc(1, sizeof(char));
+    temp_pointers->to = (char*)calloc(1, sizeof(char));
+    temp_pointers->date = (char*)calloc(1, sizeof(char));
+    temp_pointers->boundary = (char*)calloc(1, sizeof(char));
+    if (temp_pointers->from == NULL || temp_pointers->to == NULL || temp_pointers->date == NULL || temp_pointers->boundary == NULL) {
+        free_main_pointers(temp_pointers);
+        return NULL;
+    }
+    return temp_pointers;
 }
