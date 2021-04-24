@@ -12,6 +12,7 @@ int unique_extra_inf(char** header, char** line, FILE* mail) {
         } else {
             free(*header);
             *header = temp;
+            *line = NULL;
             getline(line, &line_size, mail);
         }
     }
