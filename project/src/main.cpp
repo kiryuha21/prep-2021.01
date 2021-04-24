@@ -12,8 +12,10 @@ int main(int argc, char** argv) {
         }
     }
 
+    bool with_armor = argc == 4;
+
     try {
-        map::map my_map(argv[map_arg_number]);
+        map::map my_map(argv[map_arg_number], with_armor);
         std::string action;
         while (my_map.get_player_health() > 0) {
             my_map.show_info();

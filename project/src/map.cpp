@@ -1,7 +1,8 @@
 #include "map.h"
 
 namespace map {
-    map::map(const std::string& filename) {
+    map::map(const std::string& filename, bool with_armor) {
+        this->with_armor = with_armor;
         try {
             std::ifstream file(filename);
             file >> x_size >> y_size;
@@ -12,9 +13,11 @@ namespace map {
                     enemy::enemy new_enemy(object_name, x, y);
                     enemies.push_back(new_enemy);
                 }
-                if (all_wearables.find(object_name) != all_wearables.end()) {
-                    wearable::wearable wearable(object_name, x, y);
-                    wearables.push_back(wearable);
+                if (with_armor) {
+                    if (all_wearables.find(object_name) != all_wearables.end()) {
+                        wearable::wearable wearable(object_name, x, y);
+                        wearables.push_back(wearable);
+                    }
                 }
             }
         }
@@ -80,17 +83,23 @@ namespace map {
                 std::cout << " * move up" << std::endl;
                 actions_exist = true;
             }
-            if (wearable_found) {
-                if (!(main_player.already_on_check(current_wearable))) {
-                    std::cout << " * pick " << current_wearable.get_type() << std::endl;
+            if (with_armor) {
+                if (wearable_found) {
+                    if (!(main_player.already_on_check(current_wearable))) {
+                        std::cout << " * pick " << current_wearable.get_type() << std::endl;
+                    }
+                    main_player.throw_offer();
                 }
-                main_player.throw_offer();
             }
             if (!actions_exist) {
                 std::cout << std::endl;
             }
         }
-        std::cout << main_player.get_x() << " x " << main_player.get_y() << ", hp: " << main_player.get_health() << ", armor: " << main_player.get_armour_points() << " > ";
+        std::cout << main_player.get_x() << " x " << main_player.get_y() << ", hp: " << main_player.get_health();
+        if (with_armor) {
+            std::cout << ", armor: " << main_player.get_armour_points();
+        }  
+        std::cout << " > ";
     }
 
     void map::make_action(const std::string& action) {
@@ -135,15 +144,17 @@ namespace map {
                 }
                 wearable_already_seen = false;
             }
-            if (action == "pick " + current_wearable.get_type()) {
-                main_player.put_on_wearable(current_wearable);
-                delete_wearable(current_wearable);
-                std::cout << std::endl << "clothes worn" << std::endl;
-            }
-            if (action.find("throw") != std::string::npos) {
-                std::string throw_wearable = action.substr(6);
-                std::cout << std::endl << "the " << throw_wearable << " is thrown out" << std::endl;
-                main_player.throw_out_wearable(throw_wearable);
+            if (with_armor) {
+                if (action == "pick " + current_wearable.get_type()) {
+                    main_player.put_on_wearable(current_wearable);
+                    delete_wearable(current_wearable);
+                    std::cout << std::endl << "clothes worn" << std::endl;
+                }
+                if (action.find("throw") != std::string::npos) {
+                    std::string throw_wearable = action.substr(6);
+                    std::cout << std::endl << "the " << throw_wearable << " is thrown out" << std::endl;
+                    main_player.throw_out_wearable(throw_wearable);
+                }
             }
         }
         if (action == "kick enemy") {

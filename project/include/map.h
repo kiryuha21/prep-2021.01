@@ -19,6 +19,7 @@ class map {
     int x_size;
     int y_size;
     bool wearable_already_seen = false;
+    bool with_armor;
     const std::set<std::string> all_wearables = {"armor", "helmet", "shield", "pants", "T-Shirt"};
     const std::set<std::string> all_enemies = {"wolf", "dog", "rat"};
     player::player main_player;
@@ -31,7 +32,7 @@ class map {
     void delete_wearable(wearable::wearable _wearable);
 
  public:
-    explicit map(const std::string& filename);
+    explicit map(const std::string& filename, bool with_armor);
 
     ~map() = default;
 
