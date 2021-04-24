@@ -1,5 +1,5 @@
-#ifndef UNTITLED1_MAIN_UTILS_H
-#define UNTITLED1_MAIN_UTILS_H
+#ifndef PROJECT_INCLUDE_MAIN_UTILS_H_
+#define PROJECT_INCLUDE_MAIN_UTILS_H_
 
 #include "utils.h"
 
@@ -9,4 +9,4 @@ int find_simple_header(char** header, char** line, char* header_name, int* amoun
 
 int find_boundary(char** header, char** line, int* amount);
 
-#endif //UNTITLED1_MAIN_UTILS_H
+#endif  // PROJECT_INCLUDE_MAIN_UTILS_H_

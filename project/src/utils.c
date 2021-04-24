@@ -63,13 +63,16 @@ char* add_inf_check(char* main_info, char* add_info) {
     size_t add_len = strlen(add_info);
 
     char* temp_add_info = remove_segue(add_info, &amount);
+    if (temp_add_info == NULL) {
+        return NULL;
+    }
     char* temp = (char*)calloc((main_len + add_len - amount + 1), sizeof(char));
-
-    if (temp == NULL || temp_add_info == NULL) {
+    if (temp == NULL) {
+        free(temp_add_info);
         return NULL;
     }
 
-    strcpy(temp, main_info);
+    memcpy(temp, main_info, main_len);
     memcpy(temp + main_len, temp_add_info + size, add_len - amount);
 
     free(temp_add_info);
@@ -199,7 +202,8 @@ main_pointers* create_main_pointers() {
     temp_pointers->to = (char*)calloc(1, sizeof(char));
     temp_pointers->date = (char*)calloc(1, sizeof(char));
     temp_pointers->boundary = (char*)calloc(1, sizeof(char));
-    if (temp_pointers->from == NULL || temp_pointers->to == NULL || temp_pointers->date == NULL || temp_pointers->boundary == NULL) {
+    if (temp_pointers->from == NULL || temp_pointers->to == NULL ||
+    temp_pointers->date == NULL || temp_pointers->boundary == NULL) {
         free_main_pointers(temp_pointers);
         return NULL;
     }

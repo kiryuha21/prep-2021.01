@@ -139,8 +139,9 @@ int main(int argc, const char **argv) {
             if (strstr(line, pointers->boundary) != NULL) {
                 size_t boundary_len = strlen(pointers->boundary);
                 if ((amount == 2 && boundary_len == line_len - 4) ||
-                    (amount == 1 && boundary_len == line_len - 3))
+                    (amount == 1 && boundary_len == line_len - 3)) {
                     ++parts;
+            	}
             }
         }
     }
