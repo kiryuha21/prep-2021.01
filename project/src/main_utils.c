@@ -65,6 +65,7 @@ int find_boundary(char** header, char** line, int* amount) {
         }
     }
 
+    free(*header);
     int semicolon_mark, space_mark, quotes_mark;
     char* temp_boundary = strdup(*line + index);
     char* first_temp_boundary = remove_segue(temp_boundary, amount);

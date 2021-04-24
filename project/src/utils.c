@@ -68,7 +68,6 @@ char* add_inf_check(char* main_info, char* add_info) {
     }
     char* temp = (char*)calloc((main_len + add_len - amount + 1), sizeof(char));
     if (temp == NULL) {
-        free(temp_add_info);
         return NULL;
     }
 
