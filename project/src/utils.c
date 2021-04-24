@@ -74,9 +74,10 @@ char* add_inf_check(char* main_info, char* add_info) {
     memcpy(temp, main_info, main_len);
     memcpy(temp + main_len, temp_add_info + size, add_len - amount);
 
+    free(add_info);
     free(temp_add_info);
-    free(main_info);
-    return temp;
+    main_info = temp;
+    return main_info;
 }
 
 char* delete_spaces(char* original, int* mark) {

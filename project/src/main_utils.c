@@ -10,6 +10,7 @@ int unique_extra_inf(char** header, char** line, FILE* mail) {
         if (temp == *line) {
             break;
         } else {
+            free(*header);
             *header = temp;
             getline(line, &line_size, mail);
         }
