@@ -40,6 +40,8 @@ class player {
     void throw_out_wearable(const std::string& wearable_type);
 
     void throw_offer();
+
+    bool already_on_check(const wearable::wearable& _wearable);
 };
 
 }  // namespace player

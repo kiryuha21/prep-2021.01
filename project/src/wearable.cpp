@@ -59,7 +59,7 @@ namespace wearable {
         armour_points = 0;
     }
 
-    bool wearable::operator==(wearable &other) {
+    bool wearable::operator==(const wearable &other) {
         return type == other.type && armour_points == other.armour_points &&
         weight == other.weight && x == other.x && y == other.y;
     }

@@ -81,7 +81,9 @@ namespace map {
                 actions_exist = true;
             }
             if (wearable_found) {
-                std::cout << " * pick " << current_wearable.get_type() << std::endl;
+                if (!(main_player.already_on_check(current_wearable))) {
+                    std::cout << " * pick " << current_wearable.get_type() << std::endl;
+                }
                 main_player.throw_offer();
             }
             if (!actions_exist) {

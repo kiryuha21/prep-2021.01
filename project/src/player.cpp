@@ -51,7 +51,7 @@ namespace player {
     }
 
     bool player::cmp(const wearable::wearable &first, const wearable::wearable &second) {
-        return first.get_type() > second.get_type();
+        return first.get_type() < second.get_type();
     }
 
     void player::alph_sort() {
@@ -60,9 +60,19 @@ namespace player {
 
     void player::throw_offer() {
         if (!wearables_on.empty()) {
+            alph_sort();
             for (const wearable::wearable& i : wearables_on) {
                 std::cout << " * throw " << i.get_type() << std::endl;
             }
         }
+    }
+
+    bool player::already_on_check(const wearable::wearable& _wearable) {
+        for (const wearable::wearable& i : wearables_on) {
+            if (_wearable.get_type() == i.get_type()) {
+                return true;
+            }
+        }
+        return false;
     }
 }  // namespace player

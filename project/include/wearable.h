@@ -28,7 +28,7 @@ class wearable {
 
     void destroy();
 
-    bool operator==(wearable& other);
+    bool operator==(const wearable& other);
 };
 
 }  // namespace wearable
