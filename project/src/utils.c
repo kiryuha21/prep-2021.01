@@ -23,12 +23,16 @@ char* remove_quotes(char* original, int* mark) {
 }
 
 char* remove_segue(char* original, int* amount) {
-    int size;
     if (original == NULL) {
         return NULL;
     }
 
     size_t orig_len = strlen(original);
+    if (orig_len < 3) {
+        return NULL;
+    }
+
+    int size;
     if (original[orig_len - 2] == '\r' || original[orig_len - 2] == '\n') {
         size = 2;
     } else {

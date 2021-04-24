@@ -7,4 +7,6 @@ int unique_extra_inf(char** header, char** line, FILE* mail);
 
 int find_simple_header(char** header, char** line, char* header_name, int* amount);
 
+int find_boundary(char** header, char** line, int* amount);
+
 #endif //UNTITLED1_MAIN_UTILS_H

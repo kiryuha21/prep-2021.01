@@ -108,40 +108,14 @@ int main(int argc, const char **argv) {
         // searching for boundary key
 
         if (!boundary_set) {
-            char* temp_line = tolower_w(line);
-            if (strstr(temp_line, " boundary=") != NULL ||
-                strstr(temp_line, "\tboundary=") != NULL ||
-                strstr(temp_line, ";boundary=") != NULL) {
-                size_t index = strstr(temp_line, "boundary=") - temp_line + 9;
-
-                int semicolon_mark, space_mark, quotes_mark;
-                free(pointers->boundary);
-                char* temp_boundary = strdup(line + index);
-                char* first_temp_boundary = remove_segue(temp_boundary, &amount);
-                char* semicolon_temp = delete_semicolon(first_temp_boundary, &semicolon_mark);
-                char* second_temp_boundary = remove_quotes(semicolon_temp, &quotes_mark);
-                pointers->boundary = delete_spaces(second_temp_boundary, &space_mark);
-                if (pointers->boundary == NULL) {
-                    free_pointers(pointers, mail);
-                    free(line);
-                    return ALLOC_ERR;
-                }
-                if (temp_boundary != NULL) {
-                    free(temp_boundary);
-                }
-                if (first_temp_boundary != NULL && semicolon_mark) {
-                    free(first_temp_boundary);
-                }
-                if (semicolon_temp != NULL && quotes_mark) {
-                    free(semicolon_temp);
-                }
-                if (second_temp_boundary != NULL && space_mark) {
-                    free(second_temp_boundary);
-                }
+            search_result = find_boundary(&pointers->boundary, &line, &amount);
+            if (search_result == SUCCESSFUL_SEARCH) {
                 boundary_set = true;
             }
-            if (temp_line != NULL) {
-                free(temp_line);
+            if (search_result == ALLOC_ERR) {
+                free_pointers(pointers, mail);
+                free(line);
+                return ALLOC_ERR;
             }
         }
     }
