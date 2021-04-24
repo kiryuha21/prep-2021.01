@@ -18,9 +18,8 @@ char* remove_quotes(char* original, int* mark) {
 
     memcpy(temp, original + 1, orig_len - 2);
 
-    original = temp;
     *mark = 1;
-    return original;
+    return temp;
 }
 
 char* remove_segue(char* original, int* amount) {
@@ -44,8 +43,7 @@ char* remove_segue(char* original, int* amount) {
 
     memcpy(temp, original, orig_len - size);
 
-    original = temp;
-    return original;
+    return temp;
 }
 
 char* add_inf_check(char* main_info, char* add_info) {
@@ -67,13 +65,12 @@ char* add_inf_check(char* main_info, char* add_info) {
         return NULL;
     }
 
-    memcpy(temp, main_info, main_len);
+    strcpy(temp, main_info);
     memcpy(temp + main_len, temp_add_info + size, add_len - amount);
 
     free(temp_add_info);
     free(main_info);
-    main_info = temp;
-    return main_info;
+    return temp;
 }
 
 char* delete_spaces(char* original, int* mark) {
@@ -98,9 +95,8 @@ char* delete_spaces(char* original, int* mark) {
             temp[i] = original[i];
         }
     }
-    original = temp;
     *mark = 1;
-    return original;
+    return temp;
 }
 
 char* delete_semicolon(char* original, int* mark) {
@@ -124,9 +120,8 @@ char* delete_semicolon(char* original, int* mark) {
         temp[i] = original[i];
     }
 
-    original = temp;
     *mark = 1;
-    return original;
+    return temp;
 }
 
 char* delete_fspaces(char* original, int* mark) {
@@ -145,9 +140,8 @@ char* delete_fspaces(char* original, int* mark) {
     for (pos = 0; original[pos] == ' ' ; ++pos) { }
     memcpy(temp, original + pos, orig_len - pos);
 
-    original = temp;
     *mark = 1;
-    return original;
+    return temp;
 }
 
 char* tolower_w(char* original) {
@@ -162,8 +156,7 @@ char* tolower_w(char* original) {
         temp[i] = (char)tolower(original[i]);
     }
 
-    original = temp;
-    return original;
+    return temp;
 }
 
 bool free_main_pointers(main_pointers* pointers) {
