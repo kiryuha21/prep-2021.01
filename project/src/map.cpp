@@ -98,7 +98,7 @@ namespace map {
         std::cout << main_player.get_x() << " x " << main_player.get_y() << ", hp: " << main_player.get_health();
         if (with_armor) {
             std::cout << ", armor: " << main_player.get_armour_points();
-        }  
+        }
         std::cout << " > ";
     }
 
