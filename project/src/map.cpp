@@ -2,19 +2,24 @@
 
 namespace map {
     map::map(const std::string& filename) {
-        std::ifstream file(filename);
-        file >> x_size >> y_size;
-        std::string object_name;
-        int x, y;
-        while (file >> x >> y >> object_name) {
-            if (all_enemies.find(object_name) != all_enemies.end()) {
-                enemy::enemy new_enemy(object_name, x, y);
-                enemies.push_back(new_enemy);
+        try {
+            std::ifstream file(filename);
+            file >> x_size >> y_size;
+            std::string object_name;
+            int x, y;
+            while (file >> x >> y >> object_name) {
+                if (all_enemies.find(object_name) != all_enemies.end()) {
+                    enemy::enemy new_enemy(object_name, x, y);
+                    enemies.push_back(new_enemy);
+                }
+                if (all_wearables.find(object_name) != all_wearables.end()) {
+                    wearable::wearable wearable(object_name, x, y);
+                    wearables.push_back(wearable);
+                }
             }
-            if (all_wearables.find(object_name) != all_wearables.end()) {
-                wearable::wearable wearable(object_name, x, y);
-                wearables.push_back(wearable);
-            }
+        }
+        catch(std::ifstream::failure&) {
+            throw(std::ifstream::failure("input error"));
         }
     }
 
