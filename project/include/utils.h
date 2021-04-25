@@ -19,8 +19,12 @@ typedef struct main_pointers {
     char* boundary;
 } main_pointers;
 
+// struct functions
+
 main_pointers* create_main_pointers();
 bool free_main_pointers(main_pointers* pointers);
+
+// subfunctions
 
 char* remove_quotes(char* original, int* mark);
 char* remove_segue(char* original, int* amount);

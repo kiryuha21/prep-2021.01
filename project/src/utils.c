@@ -1,5 +1,7 @@
 #include "utils.h"
 
+// removes quotes from "...", returns char* without quotes(unchanged if no quotes)
+
 char* remove_quotes(char* original, int* mark) {
     if (original == NULL) {
         return NULL;
@@ -22,6 +24,8 @@ char* remove_quotes(char* original, int* mark) {
     return temp;
 }
 
+// removes all types of segue: \r \r\n \n\r \n from given char* and return it(unchanged if no segue)
+
 char* remove_segue(char* original, int* amount) {
     if (original == NULL) {
         return NULL;
@@ -36,7 +40,11 @@ char* remove_segue(char* original, int* amount) {
     if (original[orig_len - 2] == '\r' || original[orig_len - 2] == '\n') {
         size = 2;
     } else {
-        size = 1;
+        if (original[orig_len - 1] != '\r' && original[orig_len - 1] != '\n') {
+            return original;
+        } else {
+            size = 1;
+        }
     }
     *amount = size;
     char* temp = calloc((orig_len - size + 1), sizeof(char));
@@ -49,6 +57,9 @@ char* remove_segue(char* original, int* amount) {
 
     return temp;
 }
+
+// checks if add_info is an additional information for main_info header,
+// if it is any - returns concatenated char*, if there's not - returns add_info
 
 char* add_inf_check(char* main_info, char* add_info) {
     int amount;
@@ -80,6 +91,8 @@ char* add_inf_check(char* main_info, char* add_info) {
     return main_info;
 }
 
+// deletes all spaces from the given char*, returns char*
+
 char* delete_spaces(char* original, int* mark) {
     if (original == NULL) {
         return NULL;
@@ -106,6 +119,8 @@ char* delete_spaces(char* original, int* mark) {
     return temp;
 }
 
+// deletes semicolon from given char*(returns unchanged if there's no semicolon)
+
 char* delete_semicolon(char* original, int* mark) {
     if (original == NULL) {
         return NULL;
@@ -130,6 +145,8 @@ char* delete_semicolon(char* original, int* mark) {
     *mark = 1;
     return temp;
 }
+
+// deletes all spaces before the first word in given char*(returns unchanged in case of no first spaces)
 
 char* delete_fspaces(char* original, int* mark) {
     if (original[0] != ' ') {
@@ -166,6 +183,8 @@ char* tolower_w(char* original) {
     return temp;
 }
 
+// frees the "main_pointers" struct
+
 bool free_main_pointers(main_pointers* pointers) {
     if (pointers != NULL) {
         if (pointers->from != NULL) {
@@ -185,6 +204,8 @@ bool free_main_pointers(main_pointers* pointers) {
     return true;
 }
 
+// frees "main pointers" struct and closes mail file
+
 bool free_pointers(main_pointers* pointers, FILE* mail) {
     free_main_pointers(pointers);
     if (mail != NULL) {
@@ -192,6 +213,8 @@ bool free_pointers(main_pointers* pointers, FILE* mail) {
     }
     return true;
 }
+
+// creates "main pointers" struct
 
 main_pointers* create_main_pointers() {
     main_pointers* temp_pointers = (main_pointers*) calloc(1, sizeof(main_pointers));

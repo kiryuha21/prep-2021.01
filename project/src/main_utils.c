@@ -1,5 +1,7 @@
 #include "main_utils.h"
 
+// checks additional information for every header
+
 int unique_extra_inf(char** header, char** line, FILE* mail) {
     size_t line_size = 0;
     while (true) {
@@ -18,6 +20,8 @@ int unique_extra_inf(char** header, char** line, FILE* mail) {
     }
     return 0;
 }
+
+// finds any header except boundary one
 
 int find_simple_header(char** header, char** line, char* header_name, int* amount) {
     char* pointer = strstr(*line, header_name);
@@ -44,6 +48,8 @@ int find_simple_header(char** header, char** line, char* header_name, int* amoun
     }
     return 1;
 }
+
+// finds boundary header
 
 int find_boundary(char** header, char** line, int* amount) {
     char* temp_line = tolower_w(*line);

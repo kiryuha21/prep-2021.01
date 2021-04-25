@@ -146,6 +146,8 @@ int main(int argc, const char **argv) {
         }
     }
 
+    // empty body and single part check
+
     if (empty_lines) {
         parts = 0;
     } else {
