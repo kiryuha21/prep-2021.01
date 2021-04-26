@@ -12,7 +12,7 @@ namespace map {
         }
         std::string object_name;
         int x, y;
-        while (!file.eof()) {
+        while (true) {
             if (!(file >> x >> y >> object_name).good()) {
                 break;
             }
