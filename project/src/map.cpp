@@ -5,6 +5,7 @@ namespace map {
         this->with_armor = with_armor;
         try {
             std::ifstream file(filename);
+            file.exceptions(std::ifstream::failbit);
             file >> x_size >> y_size;
             std::string object_name;
             int x, y;
