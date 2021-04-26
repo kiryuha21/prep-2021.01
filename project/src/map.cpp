@@ -3,27 +3,29 @@
 namespace map {
     map::map(const std::string& filename, bool with_armor) {
         this->with_armor = with_armor;
-        try {
-            std::ifstream file(filename);
-            file.exceptions(std::ifstream::failbit);
-            file >> x_size >> y_size;
-            std::string object_name;
-            int x, y;
-            while (file >> x >> y >> object_name) {
-                if (all_enemies.find(object_name) != all_enemies.end()) {
-                    enemy::enemy new_enemy(object_name, x, y);
-                    enemies.push_back(new_enemy);
-                }
-                if (with_armor) {
-                    if (all_wearables.find(object_name) != all_wearables.end()) {
-                        wearable::wearable wearable(object_name, x, y);
-                        wearables.push_back(wearable);
-                    }
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw(std::ifstream::failure("open error"));
+        }
+        if (!(file >> x_size >> y_size).good()) {
+            throw(std::ifstream::failure("input error"));
+        }
+        std::string object_name;
+        int x, y;
+        while (!file.eof()) {
+            if (!(file >> x >> y >> object_name).good()) {
+                break;
+            }
+            if (all_enemies.find(object_name) != all_enemies.end()) {
+                enemy::enemy new_enemy(object_name, x, y);
+                enemies.push_back(new_enemy);
+            }
+            if (with_armor) {
+                if (all_wearables.find(object_name) != all_wearables.end()) {
+                    wearable::wearable wearable(object_name, x, y);
+                    wearables.push_back(wearable);
                 }
             }
-        }
-        catch(std::ifstream::failure&) {
-            throw(std::ifstream::failure("input error"));
         }
     }
 
