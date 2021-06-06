@@ -8,6 +8,8 @@ stages:
   - build
   - test_bin
   - test_mem
+  - my_test_bin
+  - io_functions_check
 
 test_style:
   stage: test_style
@@ -32,3 +34,13 @@ test_mem:
   script:
     - apt-get update && apt-get install -y valgrind
     - ./btests/run.sh ./${BIN_NAME} --memcheck
+
+my_test_bin:
+  stage: my_test_bin
+  script:
+    - ./mybtests/run.sh ./${BIN_NAME}
+
+io_functions_check:
+  stage: io_functions_check
+  script:
+    - make test && ./functions_tests/run.sh ./test_main.out

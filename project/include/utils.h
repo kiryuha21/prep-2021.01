@@ -1,9 +1,23 @@
-#define UTILS_H
-#ifndef UTILS_H
+#ifndef PROJECT_INCLUDE_UTILS_H_
+#define PROJECT_INCLUDE_UTILS_H_
 
-#define filename "transaction.dat";
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-// This comment is very useful
-printf("This message is very useful too")
+#define filename "transaction.dat"
 
-#endif //UTILS_H
+struct master_record{
+    int number;
+    char name[20];
+    char surname[20];
+    char address[30];
+    char tel_number[15];
+    double indebtedness;
+    double credit_limit;
+    double cash_payments;
+};
+
+typedef struct master_record data;
+
+#endif  // PROJECT_INCLUDE_UTILS_H_
